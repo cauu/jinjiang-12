@@ -22,7 +22,8 @@ test('network cuts during all four videos preserve the server timeline and ident
   while((await snapshot()).room.match.phaseId===phase)await page.waitForTimeout(100);const after=await snapshot();assert.ok(after.serverTime>=end&&after.serverTime-end<3000,`${videoId} advanced ${after.serverTime-end}ms after deadline`);t.diagnostic(`${videoId} resumed without extending deadline`);
  }
  assert.ok((await call(host,'host:start',{})).ok);await checkVideo('intro');
- for(let i=0;i<2;i++){await skip();await skip();await skip();}
+ // Each ordinary level is card → result → next card (no separate transition phase): two skips per level.
+ for(let i=0;i<2;i++){await skip();await skip();}
  await skip();await skip();await checkVideo('wind');
  await skip();await skip();await checkVideo('rebirth');
  const m=(await snapshot()).room.match;assert.ok((await call(host,'host:finish',{requestId:crypto.randomUUID(),matchId:m.id,phaseId:m.phaseId})).ok);await checkVideo('ending');await context.close();

@@ -16,3 +16,7 @@ html,body,#app{width:100%;height:100%;overflow:hidden}.hud{align-items:flex-star
 /* Readable paper panels retain safe-area and touch geometry. */
 .hud #status,.hud #info{padding:5px 8px;border-radius:7px;background:#fff9e4dd;color:#243d37;text-shadow:none}.panel,.guide-card{border:2px solid #ddc799}.stick{box-shadow:0 3px 10px #4d3e2930}.jump{box-shadow:0 3px 10px #4d3e2945}
 #controls .stick,#controls .jump{transition:opacity .15s}#controls .stick.player-overlap,#controls .jump.player-overlap{opacity:.32}#controls .stick.player-overlap:active,#controls .jump.player-overlap:active{opacity:.65}
+
+.load-progress{margin:6px 0 0;font-size:13px;color:#5a7068;text-align:center}
+@media (max-height:400px){.load-progress{margin:2px 0 0;font-size:11px;line-height:1.2}}
+@media (max-height:260px){.load-progress{display:none}}

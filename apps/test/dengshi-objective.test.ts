@@ -15,15 +15,10 @@ test('a browser player selects the correct lantern area and qualifies',{timeout:
  await call(host,'host:start',{});async function snapshot(){const r=await call(host,'room:snapshot',{});assert.ok(r.ok);return r.data.room;}async function skip(){const m=(await snapshot()).match;assert.ok((await call(host,'host:skip',{requestId:crypto.randomUUID(),matchId:m.id,phaseId:m.phaseId})).ok);}await skip();await skip();await skip();
  await page.waitForFunction(()=>document.querySelector('#status')?.getAttribute('data-level')==='02-dengshi'&&document.querySelector('#status')?.getAttribute('data-phase')==='playing');await page.getByText('蜀锦主要与哪座城市有关？',{exact:false}).waitFor();
  // Keep the socket-driven comparison players on a separate lane so physical player collision does not block the browser player's route.
- for(const [i,otherId] of otherIds.entries())backend.game.players.get(otherId)!.avatar!.position.z=3+i;
+ for(const [i,otherId] of otherIds.entries()){const pos=backend.game.players.get(otherId)!.avatar!.position;pos.z=3+i;if(i>0)pos.x=0;} // idle observers stand in area B
  async function go(direction:'a'|'d', target:number){await page.keyboard.down(direction);await page.waitForFunction(({direction,target})=>{const x=Number(document.querySelector('#stage canvas')?.getAttribute('data-server-x'));return direction==='a'?x<target:x>target;},{direction,target},{timeout:4000});await page.keyboard.up(direction);}
  await go('a',-4.5);
- await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.includes('第 2/5 题')&&document.querySelector('#status')?.textContent?.includes('作答'),null,{timeout:7000});
- assert.equal((await snapshot()).match.activeIds.length,4);assert.equal((await snapshot()).players[id].status,'playing');
- await go('d',-3.5);
- await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.includes('第 3/5 题')&&document.querySelector('#status')?.textContent?.includes('作答'),null,{timeout:7000});await go('d',4.5);
- await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.includes('第 4/5 题')&&document.querySelector('#status')?.textContent?.includes('作答'),null,{timeout:7000});await go('a',-4.5);
- await page.waitForFunction(()=>document.querySelector('#status')?.textContent?.includes('第 5/5 题')&&document.querySelector('#status')?.textContent?.includes('作答'),null,{timeout:7000});await go('d',-3.5);
- await page.waitForFunction(()=>document.querySelector('#status')?.getAttribute('data-phase')==='result',null,{timeout:7000});
- const state=await snapshot();assert.ok(state.match.results.at(-1).qualifiedIds.includes(id));assert.equal(state.match.results.at(-1).eliminatedIds.length,2);assert.match(await page.locator('#message').innerText(),/晋级/);
+ // Two of four answer correctly; the survivor floor (3) saves the nearest wrong player and the round ends at the quota.
+ await page.waitForFunction(()=>document.querySelector('#status')?.getAttribute('data-phase')==='result',null,{timeout:9000});
+ const state=await snapshot(),result=state.match.results.at(-1);assert.ok(result.qualifiedIds.includes(id));assert.equal(result.qualifiedIds.length,3);assert.equal(result.eliminatedIds.length,1);assert.equal(state.match.level.data.roundResult.savedIds.length,1);assert.match(await page.locator('#message').innerText(),/晋级/);
 });

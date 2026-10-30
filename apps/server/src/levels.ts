@@ -27,7 +27,8 @@ export type LevelState = { id: LevelId; startedAt: number | null; targetCount: n
 export const rank = (n: number, ratio: number) => n === 2 ? 1 : Math.min(n - 1, Math.max(2, Math.round(n * ratio)));
 export function makeLevel(id: LevelId, players: string[]): LevelState {
  const ratio = id === '02-dengshi' ? .7 : id === '03-qibaoshi' ? .65 : .6;
- const targetCount = id === '01-jinshi' || id === '02-dengshi' || id === '06-guishi' ? null : rank(players.length, ratio);
+ // Lantern Market uses its target as a survivor floor; Jinshi eliminates a team and Guishi crowns one player.
+ const targetCount = id === '01-jinshi' || id === '06-guishi' ? null : rank(players.length, ratio);
  const data: LevelData = { tiles: Array.from({length: id === '06-guishi' ? 200 : 400}, () => ({disappearsAt:null})), owners: Array(400).fill(null), teams: [], scores: {}, fellAt:{}, items:{}, sacks:{}, gaps:[], qualifiedIds:[], questionIndex:0, questionPhase:'answering', questionPhaseEndsAt:0, question:null, answer:null, roundResult:null };
  for (const pid of players) data.scores[pid] = { count:0, reachedAt:null };
  if (id === '01-jinshi') {

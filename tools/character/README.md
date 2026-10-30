@@ -14,3 +14,15 @@ node tools/character/bake-atlas.mjs
 ```
 
 蒙版按原角色颜色自动选择衣服区域，不是通用分割算法；换模型或贴图时需重新审核脸、手、腰带和衣服边缘，必要时人工修正。减面会有四骨骼权重截断警告，动作要在游戏中复核。`bake-atlas` 从低精度角色离线生成 8 个方向、行走/跳跃画面及换色蒙版；手机的自己用高精度 GLB，其他玩家和大屏用这些面向镜头的轻量画面。贴图仅提供有限角度，不适用于自由旋转摄像机，增加镜头旋转时需要重新设计。生成品目前未经真机性能验收。
+
+
+## 运行时压缩（2026-10-30）
+
+`packages/game-client/src/assets/hanfu-boy.glb` 是压缩后的运行版本（4.5MB → 约 0.75MB）：贴图转 WebP、几何体 meshopt 压缩与量化，动画与节点名不变；加载端已启用 `MeshoptDecoder`。从 Blender 重新导出后执行：
+
+```sh
+npx @gltf-transform/cli webp hanfu-boy.glb tmp.glb --quality 88
+npx @gltf-transform/cli meshopt tmp.glb packages/game-client/src/assets/hanfu-boy.glb
+```
+
+运行时读取同名 `.webp`（无损，可见像素与 PNG 完全一致）。重新烘焙图集或蒙版后，用 sharp 以 `webp({ lossless: true, exact: true })` 重新生成对应的 `.webp`。

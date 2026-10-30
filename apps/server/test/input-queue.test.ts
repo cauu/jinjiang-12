@@ -9,7 +9,7 @@ function setup(level: '01-jinshi' | '04-shisan' = '01-jinshi') {
  const a = g.join('a', null).playerId; g.join('b', null); g.start(1000); g.step(1000, DT); g.step(1001, DT);
  return { g, a, avatar: g.players.get(a)!.avatar! };
 }
-const go = { x: -1, z: 0, jump: false, held: false }; // away from the neighbour spawned at +1
+const go = { x: -1, z: 0, jump: false, held: false }; // away from the neighbour spawned 2 m to the east
 
 test('each command advances exactly one fixed step, even when several arrive in one tick', () => {
  const { g, a, avatar } = setup(), x0 = avatar.position.x;

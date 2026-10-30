@@ -20,6 +20,8 @@ const textures = {
  roof: new URL('./assets/jinshi/texture-roof-v2.webp', import.meta.url).href,
  bamboo: new URL('./assets/jinshi/texture-bamboo-v1.webp', import.meta.url).href,
 } as const;
+/** Every image the Jinshi scene loads, for preloading during the lobby. */
+export const JINSHI_ASSETS = [mobileGroundUrl, mobileMarketUrl, mobileHorizonUrl, variedShopsUrl, ...nearGoodsUrls, ...Object.values(textures)];
 type Box = { x:number; y:number; z:number; w:number; h:number; d:number; color:number; rotation?:number; tilt?:number; surface?:'linen'|'bamboo' };
 
 export function createJinshiScene() {

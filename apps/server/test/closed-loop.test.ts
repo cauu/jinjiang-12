@@ -36,9 +36,9 @@ test('two real clients join, move and jump, trigger tiles, reconnect and finish 
   const active = await until(async () => { const s = await call(host, 'room:snapshot', {}); return s.data.room.match?.phase === 'playing' ? s.data : null; });
   const match = active.room.match, idA = ja.data.playerId, idB = jb.data.playerId;
   let seq = 0; let current = a;
-  const input = () => current.emit('input', { matchId: match.id, phaseId: match.phaseId, seq: ++seq, x: 0.7, z: 0, jumpHeld: seq < 4, jumpPressSeq: 1 });
+  const input = () => current.emit('input', { matchId: match.id, phaseId: match.phaseId, seq: ++seq, x: 0, z: -0.7, jumpHeld: seq < 4, jumpPressSeq: 1 }); // north, away from the idle player
   input(); keepMoving = setInterval(input, 65);
-  await until(async () => { const s = await call(host, 'room:snapshot', {}); const av = s.data.room.players[idA].avatar; return av.position.y > 0.55 && av.position.x > -3.5 ? av : null; });
+  await until(async () => { const s = await call(host, 'room:snapshot', {}); const av = s.data.room.players[idA].avatar; return av.position.y > 0.55 && av.position.z < 0 ? av : null; });
   clearInterval(keepMoving); keepMoving = undefined; a.disconnect();
   await until(async () => { const s = await call(host, 'room:snapshot', {}); return s.data.room.players[idA].connected === false ? s.data : null; });
   const resumed = await connect(url); sockets.push(resumed);

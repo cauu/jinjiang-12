@@ -18,7 +18,7 @@ const errorCode = (error: unknown) => { const e = error as { reason?: unknown; m
 /** Builds the JSON snapshot the UI renders from the replicated schema. Missing optional values become null. */
 export function toSnapshot(state: RoomState, serverTime: number): Snapshot {
  const json = state.toJSON() as any, players: Record<string, Player> = {};
- for (const [id, p] of Object.entries<any>(json.players ?? {})) players[id] = { id: p.id, name: p.name, color: p.color, connected: p.connected, status: p.status, avatar: p.active ? { position: { x: p.x, y: p.y, z: p.z }, velocity: { x: 0, y: p.vy, z: 0 }, facing: p.facing, grounded: p.grounded, jumpHeld: false } : null };
+ for (const [id, p] of Object.entries<any>(json.players ?? {})) players[id] = { id: p.id, name: p.name, color: p.color, connected: p.connected, status: p.status, loaded: p.loaded, avatar: p.active ? { position: { x: p.x, y: p.y, z: p.z }, velocity: { x: 0, y: p.vy, z: 0 }, facing: p.facing, grounded: p.grounded, jumpHeld: false } : null };
  let match: Match | null = null;
  if (json.match) {
   const m = json.match, d = m.level.data;
@@ -41,7 +41,7 @@ export class Connection extends EventTarget {
  private input: ReturnType<Room['input']> | null = null;
  private me: Reconciler<MotionState, Command> | null = null; private meKey = '';
  private physics: MotionWorld | null = null;
- private pendingJumps = 0; private revision = -1; private host: string | null = null; private generation = 0; private recovering = false;
+ private pendingJumps = 0; private wasGrounded: boolean | null = null; private lastVy = 0; private revision = -1; private host: string | null = null; private generation = 0; private recovering = false;
  private refreshKey = ''; private lastRefresh = 0; private refreshTimer: ReturnType<typeof setTimeout> | undefined;
  constructor() { super(); void initPhysics().then(() => { this.physics = new MotionWorld(); }); }
  get connected() { return !!this.room && !this.room.reconnection.isReconnecting && this.room.connection.isOpen; }
@@ -125,7 +125,7 @@ export class Connection extends EventTarget {
  }
  private self(): PlayerState | undefined { const id = this.session?.playerId; return id ? this.room?.state.players?.get(id) : undefined; }
  /** Local input drives the avatar only while the server accepts it. */
- controlling() { const m = this.room?.state.match, p = this.self(); return !!m && (m.phase === 'playing' || m.phase === 'countdown') && p?.status === 'playing' && p.active && !!this.physics; }
+ controlling() { const m = this.room?.state.match, p = this.self(); return !!m && m.phase === 'playing' && p?.status === 'playing' && p.active && !!this.physics; }
  /** Advance prediction for this render frame. Order matters: tick, then send, then read. */
  update(now: number) {
   const predict = this.predict, room = this.room; if (!predict || !room) return;
@@ -134,7 +134,7 @@ export class Connection extends EventTarget {
   const key = `${m.id}:${m.level.id}`;
   this.input ??= room.input();
   if (!this.me) this.me = predict.reconciler(self as unknown as MotionState, { input: this.input as any, fields: MOTION_FIELDS as any, smoothMs: 90, snap: 2.5, step: (ctx, state, command) => physics.step(state, command as Command, ctx.dt) }) as unknown as Reconciler<MotionState, Command>;
-  if (key !== this.meKey) { this.meKey = key; this.me.reset(); }
+  if (key !== this.meKey) { this.meKey = key; this.me.reset(); this.wasGrounded = null; }
   physics.setLevel(m.level.id); physics.updateTiles(m.level.data.tiles as any, m.level.data.gaps as any, this.serverNow());
   const keep = new Set<string>();
   for (const [id, p] of room.state.players) { if (id === this.session!.playerId || !p.active || p.status !== 'playing') continue; keep.add(id); physics.setObstacle(id, predict.value(p, 'x'), predict.value(p, 'y'), predict.value(p, 'z')); }
@@ -144,6 +144,10 @@ export class Connection extends EventTarget {
    data.x = this.intent.x; data.z = this.intent.z; data.held = this.intent.held; data.jump = this.pendingJumps > 0;
    if (this.pendingJumps > 0) this.pendingJumps--;
    this.input.send();
+   // Each send is one live predicted step (replays never pass through here), so feedback is immediate.
+   const st = this.me.state;
+   if (this.wasGrounded === false && st.grounded) this.dispatchEvent(new CustomEvent('local:land', { detail: { speed: -this.lastVy } }));
+   this.wasGrounded = st.grounded; this.lastVy = st.vy;
   }
  }
  /** Render pose: own avatar from prediction, everyone else interpolated in the past. */
@@ -152,6 +156,8 @@ export class Connection extends EventTarget {
   if (id === this.session?.playerId && this.me && this.controlling()) { const me = this.me; return { x: me.value('x'), y: me.value('y'), z: me.value('z'), facing: me.state.facing, grounded: me.state.grounded }; }
   const predict = this.predict!; return { x: predict.value(p, 'x'), y: predict.value(p, 'y'), z: predict.value(p, 'z'), facing: predict.value(p, 'facing'), grounded: p.grounded };
  }
+ /** Tell the server how much of the game's assets this phone has downloaded (0–100). */
+ reportLoad(percent: number) { if (this.room?.connection.isOpen) this.room.send('client:load', Math.round(percent)); }
  /** Reconciliation telemetry: per-patch correction size and drift (persistent vs jitter). */
  netStats() { const me = this.me as unknown as { lastCorrectionMag: number; drift: { ema: number; peak: number }; reconcileSeq: number } | null; return { correction: me?.lastCorrectionMag ?? 0, reconciles: me?.reconcileSeq ?? 0, driftEma: me?.drift.ema ?? 0, driftPeak: me?.drift.peak ?? 0, rtt: this.room?.clock.rtt() ?? 0 }; }
  /** Latest authoritative motion, e.g. for audio cues and the minimap. */

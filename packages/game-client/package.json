@@ -1,1 +1,1 @@
-{"name":"@jinjiang/game-client","private":true,"type":"module","exports":"./src/index.ts","dependencies":{"@colyseus/schema":"^5.0.42","@colyseus/sdk":"^0.18.8","@jinjiang/shared":"*","maath":"^0.10.8","three":"0.180.0"}}
+{"name":"@jinjiang/game-client","private":true,"type":"module","exports":"./src/index.ts","dependencies":{"@colyseus/schema":"^5.0.42","@colyseus/sdk":"^0.18.8","@jinjiang/shared":"*","howler":"^2.2.4","maath":"^0.10.8","three":"0.180.0"},"devDependencies":{"@types/howler":"^2.2.13"}}

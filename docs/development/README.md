@@ -14,6 +14,7 @@
 
 - [多人联机研发方案（讨论稿）](multiplayer-architecture.md)
 - [实时同步与角色表现（Colyseus + Rapier）](netcode.md)
+- [关卡视图、素材加载与音效](levels-audio-loading.md)
 - [游戏实体与关卡状态（首版设计稿）](game-state.md)
 - [后端 MVP 运行与联机协议](../../apps/server/README.md)
 - [白模 MVP 验收标准与执行清单](acceptance.md)

@@ -17,53 +17,50 @@ test('jinshi paints and transfers a tile, and eliminates the lowest team',()=>{
  step(g,12000);assert.equal(g.match!.phase,'result');assert.ok(g.match!.results[0].eliminatedIds.length===2);
 });
 
-test('dengshi repeats timed questions to the limit with multiple survivors',()=>{
+test('dengshi saves the players nearest the right answer to keep the survivor floor, then ends at the quota',()=>{
  const {g,ids}=setup('02-dengshi',4),d=g.match!.level.data;
+ assert.equal(g.match!.level.targetCount,3);
  // A player may change their position until the deadline.
  for(const id of ids)g.players.get(id)!.avatar!.position.x=0;
  step(g,1050);assert.equal(d.answer,null);
- g.players.get(ids[0])!.avatar!.position.x=-7;g.players.get(ids[1])!.avatar!.position.x=-7;
- step(g,1052);assert.deepEqual(d.roundResult?.eliminatedIds,ids.slice(2));
- assert.equal(g.players.get(ids[0])!.status,'playing');
- step(g,1103);step(g,1154);assert.equal(d.questionIndex,1);assert.equal(g.match!.phase,'playing');
- const correctX=[0,7,-7,0];let now=1205;
- for(let i=0;i<4;i++){
-  for(const id of ids.slice(0,2))g.players.get(id)!.avatar!.position.x=correctX[i];
-  step(g,now);assert.deepEqual(d.roundResult?.eliminatedIds,[]);step(g,now+51);
-  if(i<3){assert.equal(g.match!.phase,'playing');step(g,now+102);assert.equal(d.questionIndex,i+2);}
-  now+=153;
- }
- assert.equal(g.match!.phase,'result');assert.deepEqual(g.match!.results[0].qualifiedIds,ids.slice(0,2));
+ g.players.get(ids[0])!.avatar!.position.x=-7;g.players.get(ids[1])!.avatar!.position.x=-7;g.players.get(ids[2])!.avatar!.position.x=-3.5;
+ step(g,1052);assert.deepEqual(d.roundResult?.eliminatedIds,[ids[3]]);assert.deepEqual(d.roundResult?.savedIds,[ids[2]]);
+ assert.equal(g.players.get(ids[2])!.status,'playing');
+ step(g,1103);assert.equal(g.match!.phase,'result');assert.deepEqual(g.match!.results[0].qualifiedIds,ids.slice(0,3));
 });
 
-test('dengshi ends after revealing when only one player survives',()=>{
- const {g,ids}=setup('02-dengshi',4),d=g.match!.level.data;
- for(const id of ids)g.players.get(id)!.avatar!.position.x=0;
- g.players.get(ids[0])!.avatar!.position.x=-7;
+test('dengshi keeps asking while the field is above the floor and needs no restore pause',()=>{
+ const {g,ids}=setup('02-dengshi',8),d=g.match!.level.data;g.opts.quizRestoreMs=0;
+ assert.equal(g.match!.level.targetCount,6);
+ for(const [i,id] of ids.entries())g.players.get(id)!.avatar!.position.x=i<7?-7:7;
+ step(g,1052);assert.deepEqual(d.roundResult?.eliminatedIds,[ids[7]]);
+ step(g,1103);assert.equal(g.match!.phase,'playing');assert.equal(d.questionIndex,1);assert.equal(d.questionPhase,'answering');
+});
+
+test('dengshi ends after revealing when a two-player round is decided',()=>{
+ const {g,ids}=setup('02-dengshi',2),d=g.match!.level.data;
+ g.players.get(ids[0])!.avatar!.position.x=-7;g.players.get(ids[1])!.avatar!.position.x=0;
  step(g,1052);assert.equal(d.questionPhase,'revealing');assert.equal(g.match!.phase,'playing');
  step(g,1103);assert.equal(g.match!.phase,'result');assert.equal(d.questionIndex,0);
  assert.deepEqual(g.match!.results[0].qualifiedIds,[ids[0]]);
 });
 
-test('dengshi all wrong eliminates everyone and the match ends without inventing a champion',()=>{
+test('a question everyone misses is void and nobody is eliminated',()=>{
  const {g,ids}=setup('02-dengshi',4),d=g.match!.level.data;
  for(const id of ids)g.players.get(id)!.avatar!.position.x=0;
- step(g,1052);assert.deepEqual(d.roundResult?.eliminatedIds,ids);assert.equal(d.roundResult?.void,false);
- step(g,1103);assert.deepEqual(g.match!.results[0].qualifiedIds,[]);assert.equal(g.match!.phase,'result');
- // A normal multi-level match advances from the result to the ending.
- (g.opts.levels as LevelId[]).push('03-qibaoshi');
- step(g,1103+g.opts.resultMs);assert.equal(g.match!.phase,'ending');assert.equal(g.match!.championId,null);
+ step(g,1052);assert.equal(d.roundResult?.void,true);assert.deepEqual(d.roundResult?.eliminatedIds,[]);
+ assert.ok(ids.every(id=>g.players.get(id)!.status==='playing'));
+ step(g,1103);step(g,1154);assert.equal(g.match!.phase,'playing');assert.equal(d.questionIndex,1);
 });
 
-test('host skip or finish after everyone answers wrong never revives an eliminated player',()=>{
+test('host skip or finish after a void question keeps every player',()=>{
  for(const action of ['skip','finish'] as const){
   const {g,ids}=setup('02-dengshi',4);
   for(const id of ids)g.players.get(id)!.avatar!.position.x=0;
   step(g,1052);
-  if(action==='skip'){g.skip(1053);assert.deepEqual(g.match!.activeIds,[]);(g.opts.levels as LevelId[]).push('03-qibaoshi');g.skip(1054);}
-  else g.finishNow(1053);
-  assert.equal(g.match!.phase,'ending');assert.equal(g.match!.championId,null);
-  assert.ok(ids.every(id=>g.players.get(id)!.status==='eliminated'));
+  if(action==='skip'){g.skip(1053);assert.deepEqual(g.match!.activeIds,ids);}
+  else {g.finishNow(1053);assert.equal(g.match!.phase,'ending');assert.ok(g.match!.championId);}
+  assert.ok(ids.every(id=>g.players.get(id)!.status!=='eliminated'));
  }
 });
 
@@ -80,7 +77,7 @@ test('dengshi locks boundary positions including airborne players',()=>{
  const {g,ids}=setup('02-dengshi',4);
  const x=[-4.001,-4,3.999,4];
  for(const [i,id] of ids.entries()){const a=g.players.get(id)!.avatar!;a.position.x=x[i];a.position.y=1.5;a.grounded=false;a.velocity.y=0;}
- step(g,1052);assert.deepEqual(g.match!.level.data.roundResult?.eliminatedIds,ids.slice(1));
+ step(g,1052);const r=g.match!.level.data.roundResult!;assert.deepEqual([...r.eliminatedIds,...r.savedIds].sort(),ids.slice(1).sort());assert.deepEqual(r.savedIds,[ids[1],ids[2]],'nearest wrong players are saved first');
 });
 
 test('dengshi allows everyone to qualify when nobody is eliminated',()=>{

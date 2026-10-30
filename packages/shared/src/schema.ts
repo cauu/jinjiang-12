@@ -8,7 +8,7 @@ export type InputCommand = SchemaType<typeof InputCommand>;
 
 /** Identity, participation and the motion state the client predicts. */
 export const PlayerState = schema({
- id: t.string(), name: t.string(), color: t.string(), connected: t.boolean(), status: t.string(), active: t.boolean(),
+ id: t.string(), name: t.string(), color: t.string(), connected: t.boolean(), status: t.string(), active: t.boolean(), loaded: t.uint8(),
  x: t.float32(), y: t.float32(), z: t.float32(), vy: t.float32(), facing: t.float32(), grounded: t.boolean(), jumpT: t.float32()
 }, 'PlayerState');
 export type PlayerState = SchemaType<typeof PlayerState>;

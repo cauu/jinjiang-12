@@ -36,9 +36,9 @@ test('Jinshi production scene: full lobby-to-result journey and authoritative vi
  await shot(d,'01-lobby-display.png');
  for(const [page,name] of [[p1,'锦市甲'],[p2,'锦市乙']] as const){await page.goto(joinUrl.toString()+'&cameraMetrics=1');await page.locator('input[name=name]').fill(name);await page.locator('form button').click();await page.locator('#entry').waitFor({state:'hidden'});}
  await d.waitForFunction(()=>document.querySelector('#count')?.textContent==='2');await shot(p1,'02-lobby-phone.png');
- await d.locator('#add-bots').click();await d.waitForFunction(()=>{const audio=(window as any).__marketAudio;return !!audio&&!audio.paused},null,{timeout:10000});await d.waitForFunction(()=>document.querySelector('#count')?.textContent==='11');
+ await d.locator('#add-bots').click();await d.waitForFunction(()=>(window as any).__jjMusicPlaying===true,null,{timeout:10000});await d.waitForFunction(()=>document.querySelector('#count')?.textContent==='11');
  await d.locator('#start').click();
- for(const p of [d,p1,p2])await p.locator('video').waitFor({state:'attached',timeout:15000});await d.waitForFunction(()=>!!(window as any).__marketAudio?.paused,null,{timeout:5000});
+ for(const p of [d,p1,p2])await p.locator('video').waitFor({state:'attached',timeout:15000});await d.waitForFunction(()=>(window as any).__jjMusicPlaying===false,null,{timeout:5000});
  await p1.waitForFunction(()=>{const v=document.querySelector('video');return !!v&&v.readyState>=1&&Number.isFinite(v.duration)});
  const media=await p1.locator('video').evaluate((v:HTMLVideoElement)=>({src:v.currentSrc,duration:v.duration,muted:v.muted}));
  assert.match(media.src,/intro_phone\.mp4/);assert.ok(Math.abs(media.duration-15)<.2,`intro duration ${media.duration}`);assert.equal(media.muted,true);for(const p of [d,p1])await p.waitForFunction(()=>{const v=document.querySelector('video');return !!v&&v.currentTime>.3&&!v.paused},null,{timeout:8000});await shot(p1,'03-intro-phone.png');await shot(d,'04-intro-display.png');
@@ -55,7 +55,7 @@ test('Jinshi production scene: full lobby-to-result journey and authoritative vi
  await p1.waitForTimeout(1300);await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
  assert.ok(player.avatar!.position.z<before-.5,`touch movement z: ${before} -> ${player.avatar!.position.z}`);
  const jumpBox=await p1.locator('#jump').boundingBox();assert.ok(jumpBox);await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:jumpBox.x+jumpBox.width/2,y:jumpBox.y+jumpBox.height/2,id:2}]});
- let jumped=false;for(let i=0;i<10;i++){await p1.waitForTimeout(40);if(player.avatar!.position.y>.6)jumped=true;}await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});assert.ok(jumped,'touch jump did not rise on the server');await p1.waitForFunction(()=>((window as any).__audioEvents as any[]).some(e=>e.type==='played'&&e.src.includes('jump-v1.wav')),null,{timeout:5000});await p1.waitForFunction(()=>((window as any).__audioEvents as any[]).some(e=>e.type==='played'&&e.src.includes('land-v1.wav')),null,{timeout:5000});
+ let jumped=false;for(let i=0;i<10;i++){await p1.waitForTimeout(40);if(player.avatar!.position.y>.6)jumped=true;}await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});assert.ok(jumped,'touch jump did not rise on the server');await p1.waitForFunction(()=>((window as any).__jjAudio as string[]|undefined??[]).includes('jump'),null,{timeout:5000});await p1.waitForFunction(()=>((window as any).__jjAudio as string[]|undefined??[]).includes('land'),null,{timeout:5000});
  const data=backend.game.match!.level.data;
  for(const team of data.teams)assert.equal(data.owners.filter(o=>o===team.id).length,team.tileCount);
  const own=data.teams.find(team=>team.playerIds.includes(id))!;assert.ok(own.tileCount>0);
@@ -69,10 +69,10 @@ test('Jinshi production scene: full lobby-to-result journey and authoritative vi
  await p1.waitForFunction(()=>document.querySelector('#status')?.getAttribute('data-phase')==='result',null,{timeout:75000});
  const outcome=backend.game.match!.results[0];assert.equal(outcome.levelId,'01-jinshi');assert.equal(outcome.reason,'timeout');assert.equal(outcome.qualifiedIds.length+outcome.eliminatedIds.length,11);
  const minimum=Math.min(...data.teams.map(team=>team.tileCount));const eliminatedTeam=data.teams.find(team=>team.playerIds.every(pid=>outcome.eliminatedIds.includes(pid)));assert.ok(eliminatedTeam);assert.equal(eliminatedTeam.tileCount,minimum);
- for(const [page,pid] of [[p1,id],[p2,JSON.parse((await p2.evaluate(()=>localStorage.getItem('jinjiang-session')))! ).playerId]] as const){const expected=outcome.qualifiedIds.includes(pid)?'本关晋级':'本关淘汰';await page.waitForFunction(v=>document.querySelector('#message')?.textContent===v,expected);}
+ for(const [page,pid] of [[p1,id],[p2,JSON.parse((await p2.evaluate(()=>localStorage.getItem('jinjiang-session')))! ).playerId]] as const){const expected=outcome.qualifiedIds.includes(pid)?'本关晋级':'本关淘汰';await page.waitForFunction(v=>document.querySelector('#message .headline')?.textContent===v,expected);}
  await d.waitForFunction(expected=>Array.from(document.querySelectorAll('#teams .team')).map(x=>Number(x.textContent?.match(/(\d+) 格/)?.[1])).every((n,i)=>n===expected[i]),data.teams.map(team=>team.tileCount),{timeout:5000});const finalLabels=await d.locator('#teams .team').allTextContents();assert.deepEqual(finalLabels.map(x=>Number(x.match(/(\d+) 格/)?.[1])),data.teams.map(team=>team.tileCount));
- await p1.waitForFunction(()=>((window as any).__audioEvents as any[]).some(e=>e.type==='played'&&e.src.includes('result-v1.wav')),null,{timeout:5000});
- await spectator.waitForFunction(()=>document.querySelector('#message')?.textContent==='观战中');await d.waitForFunction(n=>document.querySelector('#message')?.textContent===`本关结束 · 晋级 ${n} 人`,outcome.qualifiedIds.length);
+ await p1.waitForFunction(()=>((window as any).__jjAudio as string[]|undefined??[]).some(v=>v==='qualify'||v==='eliminate'),null,{timeout:5000});
+ await spectator.waitForFunction(()=>document.querySelector('#message .headline')?.textContent==='观战中');await d.waitForFunction(n=>document.querySelector('#message .headline')?.textContent===`本关结束 · 晋级 ${n} 人`,outcome.qualifiedIds.length);
  await shot(p1,'08-result-phone.png');await shot(d,'09-result-display.png');await shot(spectator,'10-result-spectator.png');
  assert.deepEqual(errors,[]);console.log(`Jinshi: ${data.teams.length} teams, ${outcome.qualifiedIds.length} qualified, ${outcome.eliminatedIds.length} eliminated; 15s intro and 60s play completed`);
 });

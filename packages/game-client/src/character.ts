@@ -1,10 +1,13 @@
 import * as THREE from 'three';
 import { GLTFLoader, type GLTF } from 'three/addons/loaders/GLTFLoader.js';
 import { clone } from 'three/addons/utils/SkeletonUtils.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 const heroUrl = new URL('./assets/hanfu-boy.glb', import.meta.url).href;
-const maskUrl = new URL('./assets/hanfu-cloth-mask.png', import.meta.url).href;
-const atlasUrl = new URL('./assets/hanfu-crowd-atlas.png', import.meta.url).href;
-const atlasMaskUrl = new URL('./assets/hanfu-crowd-mask.png', import.meta.url).href;
+const maskUrl = new URL('./assets/hanfu-cloth-mask.webp', import.meta.url).href;
+const atlasUrl = new URL('./assets/hanfu-crowd-atlas.webp', import.meta.url).href;
+const atlasMaskUrl = new URL('./assets/hanfu-crowd-mask.webp', import.meta.url).href;
+/** Character files, loaded first by the preloader. */
+export const CHARACTER_ASSETS = [heroUrl, maskUrl, atlasUrl, atlasMaskUrl];
 
 export type Animation = 'idle'|'walk'|'jump';
 type Character = {root:THREE.Group;model:THREE.Object3D;quality:'hero'|'crowd';color:string;animation:Animation;elapsed:number;column?:number;mixer?:THREE.AnimationMixer;walk?:THREE.AnimationAction;jump?:THREE.AnimationAction;meshes?:THREE.SkinnedMesh[];spriteMaterial?:THREE.SpriteMaterial;uniforms?:{offset:{value:THREE.Vector2};color:{value:THREE.Color}}};
@@ -14,7 +17,8 @@ export class Characters {
  private hero:GLTF|null=null;private mask:THREE.Texture|null=null;private atlas:THREE.Texture|null=null;private atlasMask:THREE.Texture|null=null;
  private materials=new Map<string,THREE.Material>();readonly ready:Promise<void>;
  constructor(){
-  const loader=new GLTFLoader(),textures=new THREE.TextureLoader();
+  // The hero GLB is shipped meshopt-compressed with WebP textures (see tools/character/README.md).
+  const loader=new GLTFLoader().setMeshoptDecoder(MeshoptDecoder),textures=new THREE.TextureLoader();
   this.ready=Promise.all([loader.loadAsync(heroUrl),textures.loadAsync(maskUrl),textures.loadAsync(atlasUrl),textures.loadAsync(atlasMaskUrl)]).then(([hero,mask,atlas,atlasMask])=>{
    if(!hero.animations.some(a=>a.name==='Walk_Cycle')||!hero.animations.some(a=>a.name==='Jump_InPlace'))throw new Error('角色动画缺失');mask.flipY=false;mask.colorSpace=THREE.NoColorSpace;atlas.colorSpace=THREE.SRGBColorSpace;atlasMask.colorSpace=THREE.NoColorSpace;this.hero=hero;this.mask=mask;this.atlas=atlas;this.atlasMask=atlasMask;
   });
@@ -65,13 +69,15 @@ export class Characters {
  }
  update(c:Character,dt:number,animation:Animation,facing:number,speed=5){
   if(c.animation!==animation)c.elapsed=0;c.elapsed+=dt*(animation==='walk'?Math.max(.6,speed/5):1);if(c.quality==='crowd'){
-   // Eight atlas directions: only switch once the smoothed yaw is clearly inside the next sector.
-   const sector=(facing+Math.PI)/(Math.PI/4),current=c.column??((Math.round(sector)%8)+8)%8;let delta=((sector-current)%8+12)%8-4;
+   // Eight atlas directions baked at model yaw col·π/4 (same mapping as the hero); only switch once the
+   // smoothed yaw is clearly inside the next sector.
+   const sector=(Math.PI-facing)/(Math.PI/4),current=c.column??((Math.round(sector)%8)+8)%8;let delta=((sector-current)%8+12)%8-4;
    const col=Math.abs(delta)>.62?((Math.round(sector)%8)+8)%8:current;c.column=col;
    const row=animation==='walk'?1+Math.floor(c.elapsed*4)%4:animation==='jump'?5+Math.min(3,Math.floor(c.elapsed/.14)):0;
    c.uniforms!.offset.value.set(col/8,(8-row)/9);c.animation=animation;return;
   }
-  c.model.rotation.y=facing+Math.PI;
+  // Gameplay facing is atan2(x,-z) (0 = up the screen, clockwise); the model faces +z, so yaw = π − facing.
+  c.model.rotation.y=Math.PI-facing;
   if(c.animation!==animation){
    // Crossfade instead of stop/play so starting, stopping and landing never pop a pose.
    const from=c.animation==='walk'?c.walk!:c.animation==='jump'?c.jump!:null,to=animation==='walk'?c.walk!:animation==='jump'?c.jump!:null,fade=animation==='jump'?.08:.18;

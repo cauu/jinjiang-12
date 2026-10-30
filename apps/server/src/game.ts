@@ -5,7 +5,7 @@ import { initPhysics, MotionWorld, NEUTRAL, STAND_HEIGHT, tileAt, tilesUnder, ti
 // The simulation needs Rapier's WASM module; load it before any Game can step.
 await initPhysics();
 export type { Command } from '@jinjiang/shared';
-type Player = { id: string; name: string; color: string; connected: boolean; status: 'waiting' | 'playing' | 'eliminated' | 'qualified' | 'spectating'; avatar: Avatar | null };
+type Player = { id: string; name: string; color: string; connected: boolean; status: 'waiting' | 'playing' | 'eliminated' | 'qualified' | 'spectating'; avatar: Avatar | null; loaded: number };
 /** Fixed-step commands waiting for the next simulation tick. Each command is exactly one predicted client step. */
 type Motion = { queue: Command[]; lastInputAt: number; jumpTime: number; received: number; processed: number; dropped: number; jumps: number };
 const QUEUE_LIMIT = 64;
@@ -13,7 +13,7 @@ type Result = { levelId: LevelId; qualifiedIds: string[]; eliminatedIds: string[
 type Phase = 'intro' | 'card' | 'countdown' | 'playing' | 'result' | 'transition' | 'ending' | 'finished';
 type Match = { id: string; phase: Phase; phaseId: number; phaseEndsAt: number | null; transitionId: 'normal' | 'wind' | 'rebirth' | null; participants: string[]; activeIds: string[]; level: LevelState; results: Result[]; championId: string | null };
 export type Options = { introMs: number; cardMs: number; countdownMs: number; playMs: number; quizMs: number; quizRevealMs: number; quizRestoreMs: number; resultMs: number; transitionMs: number; windMs: number; rebirthMs: number; endingMs: number; protectionMs: number; collapseMs: number; tickRate: number; broadcastRate: number; inputTimeoutMs: number; shuffleQuestions: boolean; levels: readonly LevelId[]; itemFallMs: number; itemLifeMs: number; sackRespawnMs: number };
-export const defaults: Options = { introMs:15000, cardMs:6000, countdownMs:3000, playMs:60000, quizMs:10000, quizRevealMs:2000, quizRestoreMs:2000, resultMs:5000, transitionMs:2000, windMs:8000, rebirthMs:6000, endingMs:50000, protectionMs:1000, collapseMs:600, tickRate:30, broadcastRate:20, inputTimeoutMs:300, shuffleQuestions:true, levels:LEVELS, itemFallMs:2000, itemLifeMs:8000, sackRespawnMs:1000 };
+export const defaults: Options = { introMs:15000, cardMs:7000, countdownMs:3000, playMs:60000, quizMs:10000, quizRevealMs:2000, quizRestoreMs:0, resultMs:5000, transitionMs:0, windMs:8000, rebirthMs:6000, endingMs:50000, protectionMs:1000, collapseMs:600, tickRate:30, broadcastRate:20, inputTimeoutMs:300, shuffleQuestions:true, levels:LEVELS, itemFallMs:2000, itemLifeMs:8000, sackRespawnMs:1000 };
 export class GameError extends Error { constructor(public code:string) { super(code); } }
 const token = () => randomBytes(24).toString('base64url');
 const equalToken = (a:string,b:string) => { const x=Buffer.from(a),y=Buffer.from(b); return x.length===y.length && timingSafeEqual(x,y); };
@@ -30,12 +30,14 @@ export class Game {
  join(name:unknown,color:unknown) {
   if(typeof name!=='string'||!name.trim()||name.trim().length>24) throw new GameError('INVALID_NAME');
   const id=randomUUID(),secret=token();
-  const player:Player={id,name:name.trim(),color:typeof color==='string'&&/^#[0-9a-f]{6}$/i.test(color)?color:'#e66b55',connected:true,status:this.match||[...this.players.values()].filter(p=>p.status==='waiting').length>=32?'spectating':'waiting',avatar:null};
+  const player:Player={id,name:name.trim(),color:typeof color==='string'&&/^#[0-9a-f]{6}$/i.test(color)?color:'#e66b55',connected:true,loaded:0,status:this.match||[...this.players.values()].filter(p=>p.status==='waiting').length>=32?'spectating':'waiting',avatar:null};
   this.players.set(id,player); this.tokens.set(id,secret); this.revision++; return {playerId:id,resumeToken:secret};
  }
  resume(id:unknown,secret:unknown) { if(typeof id!=='string'||typeof secret!=='string') throw new GameError('INVALID_SESSION'); const expected=this.tokens.get(id),p=this.players.get(id); if(!expected||!p||!equalToken(secret,expected)) throw new GameError('INVALID_SESSION'); p.connected=true; if(!this.match)this.fillWaitingSlots(); this.revision++; return p.id; }
  /** Same session came back within the transport's reconnection window. */
  reconnect(id:string) { const p=this.players.get(id); if(p&&!p.connected){p.connected=true;if(!this.match)this.fillWaitingSlots();this.revision++;} }
+ /** Asset preload progress reported by a phone, in percent (rounded to tens to limit churn). */
+ setLoaded(id:string,percent:unknown){const p=this.players.get(id);if(!p||typeof percent!=='number'||!Number.isFinite(percent))return;const v=Math.max(0,Math.min(100,Math.round(percent/10)*10));if(v!==p.loaded){p.loaded=v;this.revision++;}}
  disconnect(id:string) { const p=this.players.get(id); if(p?.connected){p.connected=false;const m=this.motions.get(id);if(m)m.queue.length=0; if(p.avatar)p.avatar.jumpHeld=false;if(!this.match&&p.status==='waiting'){p.status='spectating';this.fillWaitingSlots();}this.revision++;} }
  private fillWaitingSlots(){let available=32-[...this.players.values()].filter(p=>p.status==='waiting').length;for(const p of this.players.values())if(available>0&&p.connected&&p.status==='spectating'){p.status='waiting';available--;}}
  removeWaitingPlayer(id:string) { if(this.match) throw new GameError('MATCH_EXISTS'); if(this.players.delete(id)){this.tokens.delete(id);this.motions.delete(id);this.fillWaitingSlots();this.revision++;} }
@@ -47,11 +49,12 @@ export class Game {
  }
  private prepareLevel(now:number) {
   const m=this.match!; m.level=makeLevel(this.opts.levels[this.levelIndex],m.activeIds); this.finishCandidateAt=null;this.spawnCounter=0;this.nextSpawnAt=now;this.pendingSacks=[];this.questionOrder=[...QUESTIONS];if(this.opts.shuffleQuestions)for(let i=this.questionOrder.length-1;i>0;i--){const j=randomInt(i+1);[this.questionOrder[i],this.questionOrder[j]]=[this.questionOrder[j],this.questionOrder[i]];}this.questionOrder=this.questionOrder.slice(0,5);
-  for(const [i,id] of m.activeIds.entries()) {const p=this.players.get(id)!;p.status='playing';const guishi=m.level.id==='06-guishi';p.avatar={position:guishi?{x:(i%10)-4.5,y:STAND_HEIGHT,z:9.4-.3*(Math.floor(i/10)%2)}:{x:(i%8)-3.5,y:STAND_HEIGHT,z:Math.floor(i/8)},velocity:{x:0,y:0,z:0},facing:0,grounded:true,jumpHeld:false}; const move=this.motions.get(id)!;move.queue.length=0;move.jumpTime=0;move.lastInputAt=now;}
+  for(const [i,id] of m.activeIds.entries()) {const p=this.players.get(id)!;p.status='playing';const guishi=m.level.id==='06-guishi';// Spawn on tile centres, 2 m apart in rows of eight across the south half, so nobody starts on a seam or wedged against a neighbour.
+  p.avatar={position:guishi?{x:(i%10)-4.5,y:STAND_HEIGHT,z:9.4-.3*(Math.floor(i/10)%2)}:{x:-7.5+2*(i%8),y:STAND_HEIGHT,z:.5+2*Math.floor(i/8)},velocity:{x:0,y:0,z:0},facing:0,grounded:true,jumpHeld:false}; const move=this.motions.get(id)!;move.queue.length=0;move.jumpTime=0;move.lastInputAt=now;}
  }
  /** Queue one fixed-step command. Commands are applied in order on the next ticks; none are merged or skipped. */
  input(id:string,value:unknown,now:number) {
-  const m=this.match,p=this.players.get(id),move=this.motions.get(id);if(!m||!['playing','countdown'].includes(m.phase)||!p||!p.connected||p.status!=='playing'||!move||!value||typeof value!=='object') throw new GameError('INPUT_NOT_ALLOWED');
+  const m=this.match,p=this.players.get(id),move=this.motions.get(id);if(!m||m.phase!=='playing'||!p||!p.connected||p.status!=='playing'||!move||!value||typeof value!=='object') throw new GameError('INPUT_NOT_ALLOWED');
   const a=value as Command;if(!Number.isFinite(a.x)||!Number.isFinite(a.z)||typeof a.jump!=='boolean'||typeof a.held!=='boolean')throw new GameError('INVALID_INPUT');
   move.received++;move.lastInputAt=now;if(a.jump)move.jumps++;if(move.queue.length>=QUEUE_LIMIT){move.queue.shift();move.dropped++;}
   move.queue.push({x:Math.max(-1,Math.min(1,a.x)),z:Math.max(-1,Math.min(1,a.z)),jump:a.jump,held:a.held});
@@ -87,7 +90,10 @@ export class Game {
  reset(){this.match=null;this.motions.clear();let slots=0;for(const p of this.players.values()){p.status=p.connected&&slots++<32?'waiting':'spectating';p.avatar=null;}this.revision++;}
  skip(now:number){const m=this.match;if(!m)throw new GameError('NO_MATCH');if(m.phase==='finished'||m.phase==='ending')throw new GameError('INVALID_PHASE');if(m.phase==='intro'){this.setPhase('card',now,this.opts.cardMs);this.revision++;return;}if(m.phase==='result'){this.advance(now);this.revision++;return;}if(m.phase==='transition'){m.transitionId=null;this.setPhase('card',now,this.opts.cardMs);this.revision++;return;}const ids=m.activeIds.filter(id=>this.players.get(id)!.status!=='eliminated');this.finish(ids,'host_skip',now);this.revision++;}
  finishNow(now:number){const m=this.match;if(!m)throw new GameError('NO_MATCH'); if(m.phase==='finished')throw new GameError('INVALID_PHASE');const ids=m.activeIds.filter(id=>this.players.get(id)?.status!=='eliminated');m.championId=(m.level.id==='01-jinshi'?[...ids].sort((a,b)=>(m.level.data.teams.find(t=>t.playerIds.includes(b))?.tileCount??0)-(m.level.data.teams.find(t=>t.playerIds.includes(a))?.tileCount??0)||m.participants.indexOf(a)-m.participants.indexOf(b)):this.scoreOrder(ids))[0]??null;this.finishEnding(now);this.revision++;}
- private advance(now:number){const m=this.match!;if(m.championId||m.activeIds.length<=1||this.levelIndex>=this.opts.levels.length-1){this.finishEnding(now);return;}const prev=m.level.id;this.levelIndex++;this.prepareLevel(now);m.transitionId=prev==='03-qibaoshi'?'wind':prev==='04-shisan'?'rebirth':'normal';this.setPhase('transition',now,m.transitionId==='wind'?this.opts.windMs:m.transitionId==='rebirth'?this.opts.rebirthMs:this.opts.transitionMs);}
+ private advance(now:number){const m=this.match!;if(m.championId||m.activeIds.length<=1||this.levelIndex>=this.opts.levels.length-1){this.finishEnding(now);return;}const prev=m.level.id;this.levelIndex++;this.prepareLevel(now);m.transitionId=prev==='03-qibaoshi'?'wind':prev==='04-shisan'?'rebirth':'normal';
+  // Ordinary level changes go straight to the next card; only the two story videos get a transition phase.
+  if(m.transitionId==='normal'&&this.opts.transitionMs<=0){m.transitionId=null;this.setPhase('card',now,this.opts.cardMs);return;}
+  this.setPhase('transition',now,m.transitionId==='wind'?this.opts.windMs:m.transitionId==='rebirth'?this.opts.rebirthMs:this.opts.transitionMs);}
  private world(){const m=this.match!;this.physics??=new MotionWorld();this.physics.setLevel(m.level.id);return this.physics;}
  /** Apply every queued command for one player. Idle, disconnected players still receive gravity once their input goes stale. */
  private simulatePlayer(id:string,now:number,dt:number,inPlay=true):boolean {
@@ -130,12 +136,20 @@ export class Game {
    if(d.questionPhase==='answering'&&now>=d.questionPhaseEndsAt){
     const correct=this.questionOrder[d.questionIndex].answer, players=alive(); d.answer=correct;
     const area=(x:number)=>x< -4?'A':x<4?'B':'C';
-    const eliminated=players.filter(id=>area(this.players.get(id)!.avatar!.position.x)!==correct);
+    const wrong=players.filter(id=>area(this.players.get(id)!.avatar!.position.x)!==correct);
+    // Safeguards: a question everyone misses is void; otherwise the players closest to the right
+    // area are saved so the round never drops below its survivor floor (the qualification target).
+    const floor=Math.min(players.length,l.targetCount??1),bounds={A:[-Infinity,-4],B:[-4,4],C:[4,Infinity]}[correct];
+    const gap=(id:string)=>{const x=this.players.get(id)!.avatar!.position.x;return x<bounds[0]?bounds[0]-x:x>bounds[1]?x-bounds[1]:0;};
+    const voided=wrong.length===players.length,need=voided?0:Math.max(0,floor-(players.length-wrong.length));
+    const saved=voided?[]:[...wrong].sort((a,b)=>gap(a)-gap(b)||m.participants.indexOf(a)-m.participants.indexOf(b)).slice(0,need);
+    const eliminated=voided?[]:wrong.filter(id=>!saved.includes(id));
     for(const id of eliminated)this.players.get(id)!.status='eliminated';
-    d.roundResult={void:false,eliminatedIds:eliminated,savedIds:[]};d.questionPhase='revealing';d.questionPhaseEndsAt=now+this.opts.quizRevealMs;changed=true;
+    d.roundResult={void:voided,eliminatedIds:eliminated,savedIds:saved};d.questionPhase='revealing';d.questionPhaseEndsAt=now+this.opts.quizRevealMs;changed=true;
    } else if(d.questionPhase==='revealing'&&now>=d.questionPhaseEndsAt){
-    if(alive().length<=1||d.questionIndex>=this.questionOrder.length-1){this.finish(alive(),'normal',now);return true;}
-    d.questionPhase='restoring';d.questionPhaseEndsAt=now+this.opts.quizRestoreMs;changed=true;
+    // End as soon as the field is down to the qualification target, like any other quota round.
+    if(alive().length<=Math.max(1,l.targetCount??1)||d.questionIndex>=this.questionOrder.length-1){this.finish(alive(),'normal',now);return true;}
+    if(this.opts.quizRestoreMs>0){d.questionPhase='restoring';d.questionPhaseEndsAt=now+this.opts.quizRestoreMs;}else{d.questionIndex++;this.nextQuestion(now);}changed=true;
    } else if(d.questionPhase==='restoring'&&now>=d.questionPhaseEndsAt){
     d.questionIndex++;this.nextQuestion(now);changed=true;
    }
@@ -161,7 +175,8 @@ export class Game {
    }
   }
   if(l.id==='06-guishi'&&l.startedAt!==null){
-   let t=l.startedAt+3000;for(let row=0;row<20;row++){if(now>=t){for(let c=0;c<10;c++){const tile=d.tiles[row*10+c];if(tile.disappearsAt===null||tile.disappearsAt>t){tile.disappearsAt=t;changed=true;}}}t+=1500-(900*row/19);}
+   // Rows are announced 1 s before they fall (disappearsAt is in the future), so clients can telegraph them.
+   let t=l.startedAt+3000;for(let row=0;row<20;row++){if(now>=t-1000){for(let c=0;c<10;c++){const tile=d.tiles[row*10+c];if(tile.disappearsAt===null||tile.disappearsAt>t){tile.disappearsAt=t;changed=true;}}}t+=1500-(900*row/19);}
   }
   if(l.id==='04-shisan'||l.id==='06-guishi'){
    if(alive().length<=(l.targetCount??0)&&this.finishCandidateAt===null)this.finishCandidateAt=now;

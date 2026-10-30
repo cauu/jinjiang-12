@@ -70,11 +70,11 @@ test('reset gives waiting slots to connected players without changing participan
 test('bots do not replay the previous match jump in a new match', () => {
  const game=new Game({...defaults,levels:['06-guishi'],introMs:0,cardMs:0,countdownMs:0});
  const bots=new DemoBots(game);bots.add(1);game.join('真人',null);game.start(10000);
- game.step(10000,1/30);bots.step(10100);game.step(10100,1/30);
+ game.step(10000,1/30);game.step(10001,1/30);bots.step(10100);game.step(10100,1/30);
  const bot=[...game.players.values()].find(p=>p.name==='机器人1')!;
  assert.ok(game.inputCursor(bot.id).jumpPressSeq>0);
  game.reset();game.opts.levels=['01-jinshi'];game.start(20000);
- game.step(20000,1/30);bots.step(20100);game.step(20100,1/30);
+ game.step(20000,1/30);game.step(20001,1/30);bots.step(20100);game.step(20100,1/30);
  assert.equal(game.inputCursor(bot.id).jumpPressSeq,0);
  assert.equal(bot.avatar!.grounded,true);
  assert.ok(Math.abs(bot.avatar!.position.y-STAND_HEIGHT)<1e-3);

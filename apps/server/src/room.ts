@@ -44,6 +44,7 @@ export class GameRoom extends Room<{ state: RoomState; input: InputCommand }> {
     const m = this.game.match; if (!m || data.matchId !== m.id || data.phaseId !== m.phaseId) throw new GameError('STALE_PHASE');
     action(); this.commandResults.set(key, true); if (this.commandResults.size > 1000) this.commandResults.delete(this.commandResults.keys().next().value!);
    }, ctx));
+  this.onMessage('client:load', (client, percent: unknown) => { const id = (client.userData as Seat | undefined)?.playerId; if (id) this.game.setLoaded(id, percent); });
   this.onMessage('media:status', (client, data: { matchId?: unknown; phaseId?: unknown; status?: unknown } | null, ctx: MessageContext) => {
    const m = this.game.match; if (!m || data?.matchId !== m.id || data?.phaseId !== m.phaseId || !['playing', 'failed', 'ended'].includes(String(data?.status))) return ctx.reject('INVALID_MEDIA_STATUS');
    return { received: true };
