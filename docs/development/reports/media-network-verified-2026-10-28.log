@@ -1,0 +1,48 @@
+
+> test:media-network
+> node --import tsx --test apps/test/media-network-reconnect.test.ts
+
+TAP version 13
+# 1:24:19 AM [vite] ws proxy error:
+# Error: This socket has been ended by the other party
+#     at genericNodeError (node:internal/errors:983:15)
+#     at wrappedFn (node:internal/errors:537:14)
+#     at Socket.writeAfterFIN [as write] (node:net:575:14)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+#     at readableAddChunkPushByteMode (node:internal/streams/readable:512:3)
+#     at Readable.push (node:internal/streams/readable:392:5)
+#     at TCP.onStreamRead (node:internal/stream_base_commons:189:23)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:24:34 AM [vite] ws proxy error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:24:43 AM [vite] ws proxy error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:24:49 AM [vite] ws proxy error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: network cuts during all four videos preserve the server timeline and identity
+ok 1 - network cuts during all four videos preserve the server timeline and identity
+  ---
+  duration_ms: 84350.288709
+  type: 'test'
+  ...
+# intro resumed without extending deadline
+# wind resumed without extending deadline
+# rebirth resumed without extending deadline
+# ending resumed without extending deadline
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 84868.774333

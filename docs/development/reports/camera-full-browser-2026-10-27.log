@@ -1,0 +1,6 @@
+
+> test:full-browser
+> node --import tsx --test apps/test/full-browser.test.ts
+
+TAP version 13
+# Port 5173 is in use, trying another one...

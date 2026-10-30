@@ -1,0 +1,54 @@
+{
+  "name": "jinjiang-game",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,mobile,display -c blue,green,magenta \"npm run dev -w @jinjiang/server\" \"npm run dev -w @jinjiang/mobile\" \"npm run dev -w @jinjiang/display\"",
+    "dev:server": "npm run dev -w @jinjiang/server",
+    "dev:mobile": "npm run dev -w @jinjiang/mobile",
+    "dev:display": "npm run dev -w @jinjiang/display",
+    "build": "tsc --noEmit && npm run build -w @jinjiang/mobile && npm run build -w @jinjiang/display",
+    "test": "node --import tsx --test apps/server/test/*.test.ts",
+    "test:network": "node --import tsx --test apps/server/test/network-conditions.test.ts",
+    "test:browser": "node --import tsx --test apps/test/browser.test.ts",
+    "test:media": "node --import tsx --test apps/test/media-playback.test.ts",
+    "test:latency": "node --import tsx --test apps/test/latency.test.ts",
+    "test:30-browsers": "node --import tsx --test apps/test/thirty-browsers.test.ts",
+    "test:full-browser": "node --import tsx --test apps/test/full-browser.test.ts",
+    "test:fallback": "node --import tsx --test apps/test/media-fallback.test.ts",
+    "test:browser-network": "node --import tsx --test apps/test/browser-network.test.ts",
+    "test:host": "node --import tsx --test apps/test/host-controls.test.ts",
+    "test:spectator": "node --import tsx --test apps/test/spectator-restore.test.ts",
+    "test:jiushi-ui": "node --import tsx --test apps/test/jiushi-objective.test.ts",
+    "test:guishi-ui": "node --import tsx --test apps/test/guishi-objective.test.ts",
+    "test:qibaoshi-ui": "node --import tsx --test apps/test/qibaoshi-objective.test.ts",
+    "test:dengshi-ui": "node --import tsx --test apps/test/dengshi-objective.test.ts",
+    "test:jinshi-ui": "node --import tsx --test apps/test/jinshi-objective.test.ts",
+    "test:camera": "node --import tsx --test apps/test/camera-framing.test.ts",
+    "test:map": "node --import tsx --test apps/test/map-guidance.test.ts",
+    "test:camera-evidence": "node --import tsx --test apps/test/six-level-camera-evidence.test.ts",
+    "test:entry-repeat": "node --import tsx --test apps/test/entry-repeat.test.ts",
+    "test:media-reconnect": "node --import tsx --test apps/test/media-reconnect.test.ts",
+    "test:media-network": "node --import tsx --test apps/test/media-network-reconnect.test.ts",
+    "test:acceptance": "node --import tsx --test --test-concurrency=1 apps/server/test/*.test.ts apps/test/*.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/qrcode": "^1.5.5",
+    "@types/three": "^0.180.0",
+    "concurrently": "^9.2.0",
+    "jsqr": "^1.4.0",
+    "playwright-core": "^1.64.1",
+    "pngjs": "^5.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.0",
+    "vite": "^6.3.0"
+  }
+}

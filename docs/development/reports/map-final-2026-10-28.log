@@ -1,0 +1,20 @@
+
+> test:map
+> node --import tsx --test apps/test/map-guidance.test.ts
+
+TAP version 13
+# Subtest: the on-screen map shows all answer areas and delivery corners
+ok 1 - the on-screen map shows all answer areas and delivery corners
+  ---
+  duration_ms: 12613.314292
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 13146.710417

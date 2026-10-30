@@ -1,0 +1,20 @@
+
+> test:media-reconnect
+> node --import tsx --test apps/test/media-reconnect.test.ts
+
+TAP version 13
+# Subtest: a browser refresh during the opening resumes without extending the server timeline
+ok 1 - a browser refresh during the opening resumes without extending the server timeline
+  ---
+  duration_ms: 18702.729083
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19231.839042

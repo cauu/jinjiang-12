@@ -1,0 +1,16 @@
+TAP version 13
+# Subtest: short landscape viewport fits entry and video, fullscreen and sustained touch movement work
+ok 1 - short landscape viewport fits entry and video, fullscreen and sustained touch movement work
+  ---
+  duration_ms: 19275.237
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19916.074792

@@ -1,0 +1,53 @@
+TAP version 13
+# Subtest: mobile camera keeps the player framed at three landscape aspect ratios
+ok 1 - mobile camera keeps the player framed at three landscape aspect ratios
+  ---
+  duration_ms: 14717.063167
+  type: 'test'
+  ...
+# Subtest: three ordinary jumps each produce a local jump and authoritative landing cue
+ok 2 - three ordinary jumps each produce a local jump and authoritative landing cue
+  ---
+  duration_ms: 8648.991791
+  type: 'test'
+  ...
+# Subtest: a player joining a full lobby is a spectator and never receives controls
+ok 3 - a player joining a full lobby is a spectator and never receives controls
+  ---
+  duration_ms: 5408.11725
+  type: 'test'
+  ...
+# Subtest: an overlapping player fades the jump control while its touch target remains usable
+ok 4 - an overlapping player fades the jump control while its touch target remains usable
+  ---
+  duration_ms: 7671.709583
+  type: 'test'
+  ...
+# Subtest: exported Jinshi GLB reloads with textured meshes and instanced colored props
+ok 5 - exported Jinshi GLB reloads with textured meshes and instanced colored props
+  ---
+  duration_ms: 5969.129583
+  type: 'test'
+  ...
+# Subtest: a browser player paints tiles by moving and sees their team area increase
+ok 6 - a browser player paints tiles by moving and sees their team area increase
+  ---
+  duration_ms: 8882.706125
+  type: 'test'
+  ...
+# Subtest: Jinshi environment does not occlude the player at the centre and eight field edges
+ok 7 - Jinshi environment does not occlude the player at the centre and eight field edges
+  ---
+  duration_ms: 24041.053166
+  type: 'test'
+  ...
+# Positions were placed on the server for camera sampling; this is not a physical-device visual acceptance.
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 79258.845625

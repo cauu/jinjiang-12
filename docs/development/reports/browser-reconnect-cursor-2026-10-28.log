@@ -1,0 +1,23 @@
+TAP version 13
+# Subtest: a delayed browser responds locally, converges after release, and restores its identity after a network cut
+ok 1 - a delayed browser responds locally, converges after release, and restores its identity after a network cut
+  ---
+  duration_ms: 34477.021666
+  type: 'test'
+  ...
+# Port 5173 is in use, trying another one...
+# Subtest: display and two mobile browsers can join, start, move and restore a session
+ok 2 - display and two mobile browsers can join, start, move and restore a session
+  ---
+  duration_ms: 41950.319292
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 78383.50975

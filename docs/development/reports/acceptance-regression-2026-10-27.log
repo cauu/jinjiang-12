@@ -1,0 +1,349 @@
+
+> test:acceptance
+> node --import tsx --test --test-concurrency=1 apps/server/test/*.test.ts apps/test/*.test.ts
+
+TAP version 13
+# Subtest: two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+ok 1 - two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+  ---
+  duration_ms: 2043.78125
+  type: 'test'
+  ...
+# Subtest: stationary tile triggers after protection; jump does not trigger a tile while airborne
+ok 2 - stationary tile triggers after protection; jump does not trigger a tile while airborne
+  ---
+  duration_ms: 0.239458
+  type: 'test'
+  ...
+# Subtest: 30 clients complete the six real rules, videos on server timeline and identical championship
+ok 3 - 30 clients complete the six real rules, videos on server timeline and identical championship
+  ---
+  duration_ms: 10848.940958
+  type: 'test'
+  ...
+# Subtest: host commands are phase checked and retrying a skip does not skip twice
+ok 4 - host commands are phase checked and retrying a skip does not skip twice
+  ---
+  duration_ms: 7.946625
+  type: 'test'
+  ...
+# Subtest: media HTTP serves byte ranges and missing files produce a fallback signal
+ok 5 - media HTTP serves byte ranges and missing files produce a fallback signal
+  ---
+  duration_ms: 17.839959
+  type: 'test'
+  ...
+# Subtest: server owns video deadline and resume snapshot, and a late client cannot extend it
+ok 6 - server owns video deadline and resume snapshot, and a late client cannot extend it
+  ---
+  duration_ms: 1.440208
+  type: 'test'
+  ...
+# Subtest: default game begins with the fifteen-second opening and follows the server timeline
+ok 7 - default game begins with the fifteen-second opening and follows the server timeline
+  ---
+  duration_ms: 0.440625
+  type: 'test'
+  ...
+# Subtest: 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+ok 8 - 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+  ---
+  duration_ms: 32055.792
+  type: 'test'
+  ...
+# seed=12345, RTT ms min=77, p50=161, p95=315, max=368; network cuts recovered=3; clients=30; sampled inputs accepted=333, rejected=35, rejection codes={"INPUT_NOT_ALLOWED":35}
+# Subtest: jinshi paints and transfers a tile, and eliminates the lowest team
+ok 9 - jinshi paints and transfers a tile, and eliminates the lowest team
+  ---
+  duration_ms: 1.277083
+  type: 'test'
+  ...
+# Subtest: dengshi all wrong voids the question and partial wrong answers are rescued to target
+ok 10 - dengshi all wrong voids the question and partial wrong answers are rescued to target
+  ---
+  duration_ms: 0.8235
+  type: 'test'
+  ...
+# Subtest: qibaoshi awards a contested landed item once and never awards an airborne one
+ok 11 - qibaoshi awards a contested landed item once and never awards an airborne one
+  ---
+  duration_ms: 0.329417
+  type: 'test'
+  ...
+# Subtest: jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+ok 12 - jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+  ---
+  duration_ms: 0.775083
+  type: 'test'
+  ...
+# Subtest: guishi goal selects the champion; all-fall and timeout paths terminate
+ok 13 - guishi goal selects the champion; all-fall and timeout paths terminate
+  ---
+  duration_ms: 0.27825
+  type: 'test'
+  ...
+# Subtest: guishi staircase can be climbed through ordinary directional and jump inputs
+ok 14 - guishi staircase can be climbed through ordinary directional and jump inputs
+  ---
+  duration_ms: 1.218084
+  type: 'test'
+  ...
+# Subtest: a delayed browser responds locally, converges after release, and restores its identity after a network cut
+ok 15 - a delayed browser responds locally, converges after release, and restores its identity after a network cut
+  ---
+  duration_ms: 28459.341791
+  type: 'test'
+  ...
+# Port 5173 is in use, trying another one...
+# Subtest: display and two mobile browsers can join, start, move and restore a session
+ok 16 - display and two mobile browsers can join, start, move and restore a session
+  ---
+  duration_ms: 34036.750708
+  type: 'test'
+  ...
+# Subtest: a browser player selects the correct lantern area and qualifies
+ok 17 - a browser player selects the correct lantern area and qualifies
+  ---
+  duration_ms: 16334.399916
+  type: 'test'
+  ...
+# Port 5173 is in use, trying another one...
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# 10:04:13 PM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: 30 browser users play the default-duration six-level match without host skips
+ok 18 - 30 browser users play the default-duration six-level match without host skips
+  ---
+  duration_ms: 408605.055333
+  type: 'test'
+  ...
+# 30 browsers completed six levels and saw 冠军：玩家4
+# Subtest: a browser player can jump up the staircase and claim the goal
+not ok 19 - a browser player can jump up the staircase and claim the goal
+  ---
+  duration_ms: 15998.206083
+  type: 'test'
+  location: '/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/guishi-objective.test.ts:1:575'
+  failureType: 'testCodeFailure'
+  error: |-
+    player did not reach goal; state {"position":{"x":-0.005025253169416738,"y":-5.589632274740486,"z":-23.3599170192269},"velocity":{"x":0,"y":-25.750586883567042,"z":-4},"facing":0,"grounded":false,"jumpHeld":false}
+    + actual - expected
+    
+    + null
+    - '69f45ac5-1c16-4555-bdbf-49b91ff091bc'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '69f45ac5-1c16-4555-bdbf-49b91ff091bc'
+  actual: ~
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/guishi-objective.test.ts:25:103)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Subtest: display can start, skip, finish and reset ten consecutive times
+ok 20 - display can start, skip, finish and reset ten consecutive times
+  ---
+  duration_ms: 6173.534625
+  type: 'test'
+  ...
+# Subtest: a browser player paints tiles by moving and sees their team area increase
+ok 21 - a browser player paints tiles by moving and sees their team area increase
+  ---
+  duration_ms: 5513.269084
+  type: 'test'
+  ...
+# Subtest: a browser player collects and delivers three grain sacks using actual controls
+ok 22 - a browser player collects and delivers three grain sacks using actual controls
+  ---
+  duration_ms: 11665.157375
+  type: 'test'
+  ...
+# Subtest: 100 real pointer direction changes give a rendered character response with p95 at most 100ms
+ok 23 - 100 real pointer direction changes give a rendered character response with p95 at most 100ms
+  ---
+  duration_ms: 5638.077708
+  type: 'test'
+  ...
+# 100 pointer-to-render samples p95=0.4ms max=134.3ms
+# Port 5173 is in use, trying another one...
+# Subtest: all four failed videos show fallback on mobile and display and do not stop the timeline
+ok 24 - all four failed videos show fallback on mobile and display and do not stop the timeline
+  ---
+  duration_ms: 21804.371042
+  type: 'test'
+  ...
+# Subtest: all four placeholder videos and their mobile copies load and play in Chrome at the intended duration
+ok 25 - all four placeholder videos and their mobile copies load and play in Chrome at the intended duration
+  ---
+  duration_ms: 2742.9725
+  type: 'test'
+  ...
+# Subtest: a browser player moves to a landed jiaozi and sees the score increase
+ok 26 - a browser player moves to a landed jiaozi and sees the score increase
+  ---
+  duration_ms: 8585.995
+  type: 'test'
+  ...
+# Subtest: a player eliminated by falling resumes as spectator after refresh
+ok 27 - a player eliminated by falling resumes as spectator after refresh
+  ---
+  duration_ms: 7882.81575
+  type: 'test'
+  ...
+# Port 5173 is in use, trying another one...
+# 10:06:07 PM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: 30 independent real browser sessions join one room and see the start of a game
+ok 28 - 30 independent real browser sessions join one room and see the start of a game
+  ---
+  duration_ms: 40746.924209
+  type: 'test'
+  ...
+# 30 independent browser contexts joined and reached playing; this is not a full six-level acceptance run.
+1..28
+# tests 28
+# suites 0
+# pass 27
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 666439.612041

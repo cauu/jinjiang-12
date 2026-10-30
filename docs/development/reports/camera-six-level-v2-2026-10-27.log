@@ -1,0 +1,29 @@
+
+> test:camera-evidence
+> node --import tsx --test apps/test/six-level-camera-evidence.test.ts
+
+TAP version 13
+# Port 5173 is in use, trying another one...
+# Port 5174 is in use, trying another one...
+# Port 5173 is in use, trying another one...
+# Subtest: capture six level mobile camera samples
+ok 1 - capture six level mobile camera samples
+  ---
+  duration_ms: 28890.250292
+  type: 'test'
+  ...
+# 01-jinshi: captured desktop browser opening, movement and jump; this is not full acceptance
+# 02-dengshi: captured desktop browser opening, movement and jump; this is not full acceptance
+# 03-qibaoshi: captured desktop browser opening, movement and jump; this is not full acceptance
+# 04-shisan: captured desktop browser opening, movement and jump; this is not full acceptance
+# 05-jiushi: captured desktop browser opening, movement and jump; this is not full acceptance
+# 06-guishi: captured desktop browser opening, movement and jump; this is not full acceptance
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29509.965041

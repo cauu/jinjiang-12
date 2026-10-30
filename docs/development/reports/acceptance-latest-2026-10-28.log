@@ -1,0 +1,322 @@
+
+> test:acceptance
+> node --import tsx --test --test-concurrency=1 apps/server/test/*.test.ts apps/test/*.test.ts
+
+TAP version 13
+# Subtest: two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+ok 1 - two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+  ---
+  duration_ms: 2159.89325
+  type: 'test'
+  ...
+# Subtest: stationary tile triggers after protection; jump does not trigger a tile while airborne
+ok 2 - stationary tile triggers after protection; jump does not trigger a tile while airborne
+  ---
+  duration_ms: 0.297834
+  type: 'test'
+  ...
+# Subtest: 30 clients complete the six real rules, videos on server timeline and identical championship
+ok 3 - 30 clients complete the six real rules, videos on server timeline and identical championship
+  ---
+  duration_ms: 10263.487584
+  type: 'test'
+  ...
+# Subtest: host commands are phase checked and retrying a skip does not skip twice
+ok 4 - host commands are phase checked and retrying a skip does not skip twice
+  ---
+  duration_ms: 7.173916
+  type: 'test'
+  ...
+# Subtest: world acknowledgment advances only after a tick samples the latest input
+ok 5 - world acknowledgment advances only after a tick samples the latest input
+  ---
+  duration_ms: 1.053208
+  type: 'test'
+  ...
+# Subtest: disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+ok 6 - disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+  ---
+  duration_ms: 0.611667
+  type: 'test'
+  ...
+# Subtest: phase reset discards unsampled prior-phase input without acknowledging it
+ok 7 - phase reset discards unsampled prior-phase input without acknowledging it
+  ---
+  duration_ms: 0.600416
+  type: 'test'
+  ...
+# Subtest: input is sampled at the 300ms boundary and discarded after it
+ok 8 - input is sampled at the 300ms boundary and discarded after it
+  ---
+  duration_ms: 0.157417
+  type: 'test'
+  ...
+# Subtest: media HTTP serves byte ranges and missing files produce a fallback signal
+ok 9 - media HTTP serves byte ranges and missing files produce a fallback signal
+  ---
+  duration_ms: 16.051792
+  type: 'test'
+  ...
+# Subtest: server owns video deadline and resume snapshot, and a late client cannot extend it
+ok 10 - server owns video deadline and resume snapshot, and a late client cannot extend it
+  ---
+  duration_ms: 1.264209
+  type: 'test'
+  ...
+# Subtest: default game begins with the fifteen-second opening and follows the server timeline
+ok 11 - default game begins with the fifteen-second opening and follows the server timeline
+  ---
+  duration_ms: 0.399167
+  type: 'test'
+  ...
+# Subtest: 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+ok 12 - 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+  ---
+  duration_ms: 33481.843917
+  type: 'test'
+  ...
+# seed=12345, RTT ms min=73, p50=172, p95=330, max=370; network cuts recovered=3; clients=30; sampled inputs accepted=365, rejected=35, rejection codes={"INPUT_NOT_ALLOWED":35}
+# Subtest: jinshi paints and transfers a tile, and eliminates the lowest team
+ok 13 - jinshi paints and transfers a tile, and eliminates the lowest team
+  ---
+  duration_ms: 1.253708
+  type: 'test'
+  ...
+# Subtest: dengshi all wrong voids the question and partial wrong answers are rescued to target
+ok 14 - dengshi all wrong voids the question and partial wrong answers are rescued to target
+  ---
+  duration_ms: 0.860167
+  type: 'test'
+  ...
+# Subtest: qibaoshi awards a contested landed item once and never awards an airborne one
+ok 15 - qibaoshi awards a contested landed item once and never awards an airborne one
+  ---
+  duration_ms: 0.333125
+  type: 'test'
+  ...
+# Subtest: jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+ok 16 - jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+  ---
+  duration_ms: 0.7865
+  type: 'test'
+  ...
+# Subtest: guishi goal selects the champion; all-fall and timeout paths terminate
+ok 17 - guishi goal selects the champion; all-fall and timeout paths terminate
+  ---
+  duration_ms: 0.2795
+  type: 'test'
+  ...
+# Subtest: guishi staircase can be climbed through ordinary directional and jump inputs
+ok 18 - guishi staircase can be climbed through ordinary directional and jump inputs
+  ---
+  duration_ms: 1.301083
+  type: 'test'
+  ...
+# 1:29:05 AM [vite] ws proxy error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: a delayed browser responds locally, converges after release, and restores its identity after a network cut
+ok 19 - a delayed browser responds locally, converges after release, and restores its identity after a network cut
+  ---
+  duration_ms: 29617.739666
+  type: 'test'
+  ...
+# Port 5173 is in use, trying another one...
+# Subtest: display and two mobile browsers can join, start, move and restore a session
+ok 20 - display and two mobile browsers can join, start, move and restore a session
+  ---
+  duration_ms: 33572.068042
+  type: 'test'
+  ...
+# Subtest: mobile camera keeps the player framed at three landscape aspect ratios
+ok 21 - mobile camera keeps the player framed at three landscape aspect ratios
+  ---
+  duration_ms: 11124.845125
+  type: 'test'
+  ...
+# Subtest: a browser player selects the correct lantern area and qualifies
+ok 22 - a browser player selects the correct lantern area and qualifies
+  ---
+  duration_ms: 16171.254791
+  type: 'test'
+  ...
+# Port 5173 is in use, trying another one...
+# 1:30:18 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:30:25 AM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at afterWriteDispatched (node:internal/stream_base_commons:159:15)
+#     at writeGeneric (node:internal/stream_base_commons:150:3)
+#     at Socket._writeGeneric (node:net:966:11)
+#     at Socket._write (node:net:978:8)
+#     at writeOrBuffer (node:internal/streams/writable:572:12)
+#     at _write (node:internal/streams/writable:501:10)
+#     at Writable.write (node:internal/streams/writable:510:10)
+#     at Socket.ondata (node:internal/streams/readable:1009:22)
+#     at Socket.emit (node:events:519:28)
+#     at addChunk (node:internal/streams/readable:561:12)
+# Subtest: two independent browser sessions enter from the display URL ten times
+ok 23 - two independent browser sessions enter from the display URL ten times
+  ---
+  duration_ms: 20998.809792
+  type: 'test'
+  ...
+# 10/10 two-session browser entries passed at 127.0.0.1; QR image decoded; physical QR scanning and another device are not covered
+# Port 5173 is in use, trying another one...
+# 1:37:04 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:37:04 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:37:04 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:37:05 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:37:05 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: browser users play a default-duration match without host skips
+ok 24 - browser users play a default-duration match without host skips
+  ---
+  duration_ms: 392176.397666
+  type: 'test'
+  ...
+# 30 browsers completed 6 levels and saw 冠军：玩家4
+# Subtest: a browser player can jump up the staircase and claim the goal
+ok 25 - a browser player can jump up the staircase and claim the goal
+  ---
+  duration_ms: 13169.432041
+  type: 'test'
+  ...
+# Subtest: display can start, skip, finish and reset ten consecutive times
+ok 26 - display can start, skip, finish and reset ten consecutive times
+  ---
+  duration_ms: 6127.385333
+  type: 'test'
+  ...
+# Subtest: a browser player paints tiles by moving and sees their team area increase
+ok 27 - a browser player paints tiles by moving and sees their team area increase
+  ---
+  duration_ms: 5454.472625
+  type: 'test'
+  ...
+# Subtest: a browser player collects and delivers three grain sacks using actual controls
+ok 28 - a browser player collects and delivers three grain sacks using actual controls
+  ---
+  duration_ms: 11370.394416
+  type: 'test'
+  ...
+# Subtest: 100 real pointer direction changes give a rendered character response with p95 at most 100ms
+ok 29 - 100 real pointer direction changes give a rendered character response with p95 at most 100ms
+  ---
+  duration_ms: 5580.236042
+  type: 'test'
+  ...
+# 100 pointer-to-render samples p95=0.4ms max=82.3ms
+# Subtest: the on-screen map shows all answer areas and delivery corners
+ok 30 - the on-screen map shows all answer areas and delivery corners
+  ---
+  duration_ms: 12064.0705
+  type: 'test'
+  ...
+# Port 5173 is in use, trying another one...
+# Subtest: all four failed videos show fallback on mobile and display and do not stop the timeline
+ok 31 - all four failed videos show fallback on mobile and display and do not stop the timeline
+  ---
+  duration_ms: 21937.261208
+  type: 'test'
+  ...
+# 1:38:46 AM [vite] ws proxy error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:38:54 AM [vite] ws proxy error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:39:00 AM [vite] ws proxy error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: network cuts during all four videos preserve the server timeline and identity
+ok 32 - network cuts during all four videos preserve the server timeline and identity
+  ---
+  duration_ms: 83923.125959
+  type: 'test'
+  ...
+# intro resumed without extending deadline
+# wind resumed without extending deadline
+# rebirth resumed without extending deadline
+# ending resumed without extending deadline
+# Subtest: all four placeholder videos and their mobile copies load and play in Chrome at the intended duration
+ok 33 - all four placeholder videos and their mobile copies load and play in Chrome at the intended duration
+  ---
+  duration_ms: 2781.643959
+  type: 'test'
+  ...
+# Subtest: a browser refresh during the opening resumes without extending the server timeline
+ok 34 - a browser refresh during the opening resumes without extending the server timeline
+  ---
+  duration_ms: 18290.677917
+  type: 'test'
+  ...
+# Subtest: a browser player moves to a landed jiaozi and sees the score increase
+ok 35 - a browser player moves to a landed jiaozi and sees the score increase
+  ---
+  duration_ms: 8062.932708
+  type: 'test'
+  ...
+# Subtest: capture six level mobile camera samples
+ok 36 - capture six level mobile camera samples
+  ---
+  duration_ms: 26400.488792
+  type: 'test'
+  ...
+# 01-jinshi: exercised desktop browser opening, movement and jump; no video or screenshot saved; this is not full acceptance
+# 02-dengshi: exercised desktop browser opening, movement and jump; no video or screenshot saved; this is not full acceptance
+# 03-qibaoshi: exercised desktop browser opening, movement and jump; no video or screenshot saved; this is not full acceptance
+# 04-shisan: exercised desktop browser opening, movement and jump; no video or screenshot saved; this is not full acceptance
+# 05-jiushi: exercised desktop browser opening, movement and jump; no video or screenshot saved; this is not full acceptance
+# 06-guishi: exercised desktop browser opening, movement and jump; no video or screenshot saved; this is not full acceptance
+# Subtest: a player eliminated by falling resumes as spectator after refresh
+ok 37 - a player eliminated by falling resumes as spectator after refresh
+  ---
+  duration_ms: 7929.24425
+  type: 'test'
+  ...
+# Port 5173 is in use, trying another one...
+# 1:41:17 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:41:36 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: 30 independent real browser sessions join one room and see the start of a game
+ok 38 - 30 independent real browser sessions join one room and see the start of a game
+  ---
+  duration_ms: 41972.5635
+  type: 'test'
+  ...
+# 30 independent browser contexts joined and reached playing; this is not a full six-level acceptance run.
+1..38
+# tests 38
+# suites 0
+# pass 38
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 824912.618709

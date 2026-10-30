@@ -1,0 +1,28 @@
+
+> test:browser-network
+> node --import tsx --test apps/test/browser-network.test.ts
+
+TAP version 13
+# Subtest: a delayed browser responds locally, converges after release, and restores its identity after a network cut
+not ok 1 - a delayed browser responds locally, converges after release, and restores its identity after a network cut
+  ---
+  duration_ms: 35568.336
+  type: 'test'
+  location: '/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/browser-network.test.ts:1:584'
+  failureType: 'testCodeFailure'
+  error: 'page.waitForFunction: Timeout 5000ms exceeded.'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    TestContext.<anonymous> (/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/browser-network.test.ts:31:17)
+  ...
+# {"afterReconnect":-0.7499999999999996,"cursorBefore":{"seq":44,"jumpPressSeq":0},"cursorAfter":{"seq":99,"jumpPressSeq":0},"player":{"id":"fec0e1d1-db2c-4ee1-823c-b3df9d5ac846","name":"网络玩家","color":"\#e66b55","connected":true,"status":"playing","avatar":{"position":{"x":-0.7499999999999996,"y":0.5,"z":0},"velocity":{"x":0,"y":0,"z":0},"facing":1.5707963267948966,"grounded":true,"jumpHeld":false}},"page":{"serverX":"-0.7499999999999996","playerX":"-0.7499999999999999","status":"锦市 · 93秒","stick":""}}
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 37016.18075

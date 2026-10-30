@@ -1,0 +1,28 @@
+
+> test:browser-network
+> node --import tsx --test apps/test/browser-network.test.ts
+
+TAP version 13
+# Subtest: a delayed browser responds locally, converges after release, and restores its identity after a network cut
+not ok 1 - a delayed browser responds locally, converges after release, and restores its identity after a network cut
+  ---
+  duration_ms: 34543.862542
+  type: 'test'
+  location: '/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/browser-network.test.ts:1:584'
+  failureType: 'testCodeFailure'
+  error: 'page.waitForFunction: Timeout 5000ms exceeded.'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    TestContext.<anonymous> (/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/browser-network.test.ts:31:17)
+  ...
+# {"afterReconnect":-0.8666666666666663,"cursorBefore":{"seq":32,"jumpPressSeq":0},"cursorAfter":{"seq":98,"jumpPressSeq":0},"player":{"id":"da6bbeff-99cb-4a23-8331-8bdc2ad29880","name":"网络玩家","color":"\#e66b55","connected":true,"status":"playing","avatar":{"position":{"x":-0.8666666666666663,"y":0.5,"z":0},"velocity":{"x":0,"y":0,"z":0},"facing":1.5707963267948966,"grounded":true,"jumpHeld":false}},"page":{"serverX":"-0.8666666666666663","playerX":"-0.8666666666666664","status":"锦市 · 94秒","stick":"","entryHidden":false,"error":"恢复失败，请重新入场","hit":"<section id=\\"entry\\" class=\\"entry\\"><div class=\\"panel\\"><h1>锦江十二月市</h1><p>输入名字，加入现场游戏</p><p id=\\"safari-tip\\" hidden=\\"\\">Safari 可在页面菜单中选择「更多 → 隐藏工具栏」。</p><form><input name=\\"name\\" maxlength=\\"24\\" placeholder=\\"你的名字\\" required=\\"\\"><label class=\\"color-label\\">角色颜色 <input type=\\"color\\" name=\\"color\\" value=\\"\#e66b55\\">"}}
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 35126.428084

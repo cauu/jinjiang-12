@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: world acknowledgment advances only after a tick samples the latest input
+ok 1 - world acknowledgment advances only after a tick samples the latest input
+  ---
+  duration_ms: 1.205667
+  type: 'test'
+  ...
+# Subtest: disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+ok 2 - disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+  ---
+  duration_ms: 0.552791
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 167.37

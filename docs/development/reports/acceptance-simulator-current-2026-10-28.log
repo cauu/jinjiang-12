@@ -1,0 +1,179 @@
+
+> test:acceptance
+> node --import tsx --test --test-concurrency=1 apps/server/test/*.test.ts apps/test/*.test.ts
+
+TAP version 13
+# Subtest: bot input is accepted by the simulation in each level
+ok 1 - bot input is accepted by the simulation in each level
+  ---
+  duration_ms: 13.973792
+  type: 'test'
+  ...
+# Subtest: bots respect capacity, reserve a place for a human and can be removed
+ok 2 - bots respect capacity, reserve a place for a human and can be removed
+  ---
+  duration_ms: 0.624291
+  type: 'test'
+  ...
+# Subtest: clearing bots promotes connected spectators into available slots for the next game
+ok 3 - clearing bots promotes connected spectators into available slots for the next game
+  ---
+  duration_ms: 0.577375
+  type: 'test'
+  ...
+# Subtest: a disconnected spectator takes a free slot when resuming in the lobby
+ok 4 - a disconnected spectator takes a free slot when resuming in the lobby
+  ---
+  duration_ms: 0.323375
+  type: 'test'
+  ...
+# Subtest: bots do not replay the previous match jump in a new match
+ok 5 - bots do not replay the previous match jump in a new match
+  ---
+  duration_ms: 0.215791
+  type: 'test'
+  ...
+# Subtest: two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+ok 6 - two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+  ---
+  duration_ms: 2059.321583
+  type: 'test'
+  ...
+# Subtest: stationary tile triggers after protection; jump does not trigger a tile while airborne
+ok 7 - stationary tile triggers after protection; jump does not trigger a tile while airborne
+  ---
+  duration_ms: 0.601458
+  type: 'test'
+  ...
+# Subtest: 30 clients complete the six real rules, videos on server timeline and identical championship
+ok 8 - 30 clients complete the six real rules, videos on server timeline and identical championship
+  ---
+  duration_ms: 10345.256125
+  type: 'test'
+  ...
+# Subtest: host commands are phase checked and retrying a skip does not skip twice
+ok 9 - host commands are phase checked and retrying a skip does not skip twice
+  ---
+  duration_ms: 10.308292
+  type: 'test'
+  ...
+# Subtest: world acknowledgment advances only after a tick samples the latest input
+ok 10 - world acknowledgment advances only after a tick samples the latest input
+  ---
+  duration_ms: 1.218833
+  type: 'test'
+  ...
+# Subtest: disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+ok 11 - disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+  ---
+  duration_ms: 0.644333
+  type: 'test'
+  ...
+# Subtest: phase reset discards unsampled prior-phase input without acknowledging it
+ok 12 - phase reset discards unsampled prior-phase input without acknowledging it
+  ---
+  duration_ms: 0.6505
+  type: 'test'
+  ...
+# Subtest: input is sampled at the 300ms boundary and discarded after it
+ok 13 - input is sampled at the 300ms boundary and discarded after it
+  ---
+  duration_ms: 0.168084
+  type: 'test'
+  ...
+# Subtest: media HTTP serves byte ranges and missing files produce a fallback signal
+ok 14 - media HTTP serves byte ranges and missing files produce a fallback signal
+  ---
+  duration_ms: 22.710458
+  type: 'test'
+  ...
+# Subtest: server owns video deadline and resume snapshot, and a late client cannot extend it
+ok 15 - server owns video deadline and resume snapshot, and a late client cannot extend it
+  ---
+  duration_ms: 1.528084
+  type: 'test'
+  ...
+# Subtest: default game begins with the fifteen-second opening and follows the server timeline
+ok 16 - default game begins with the fifteen-second opening and follows the server timeline
+  ---
+  duration_ms: 0.502708
+  type: 'test'
+  ...
+# Subtest: 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+ok 17 - 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+  ---
+  duration_ms: 32052.699458
+  type: 'test'
+  ...
+# seed=12345, RTT ms min=75, p50=165, p95=337, max=368; network cuts recovered=3; clients=30; sampled inputs accepted=338, rejected=31, rejection codes={"INPUT_NOT_ALLOWED":31}
+# Subtest: jinshi paints and transfers a tile, and eliminates the lowest team
+ok 18 - jinshi paints and transfers a tile, and eliminates the lowest team
+  ---
+  duration_ms: 1.653042
+  type: 'test'
+  ...
+# Subtest: dengshi all wrong voids the question and partial wrong answers are rescued to target
+ok 19 - dengshi all wrong voids the question and partial wrong answers are rescued to target
+  ---
+  duration_ms: 0.92775
+  type: 'test'
+  ...
+# Subtest: qibaoshi awards a contested landed item once and never awards an airborne one
+ok 20 - qibaoshi awards a contested landed item once and never awards an airborne one
+  ---
+  duration_ms: 0.366416
+  type: 'test'
+  ...
+# Subtest: jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+ok 21 - jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+  ---
+  duration_ms: 0.857084
+  type: 'test'
+  ...
+# Subtest: guishi goal selects the champion; all-fall and timeout paths terminate
+ok 22 - guishi goal selects the champion; all-fall and timeout paths terminate
+  ---
+  duration_ms: 0.301166
+  type: 'test'
+  ...
+# Subtest: guishi staircase can be climbed through ordinary directional and jump inputs
+ok 23 - guishi staircase can be climbed through ordinary directional and jump inputs
+  ---
+  duration_ms: 1.551042
+  type: 'test'
+  ...
+# 12:00:48 PM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: display adds bots, a human plays with moving bots, and reset permits removal
+ok 24 - display adds bots, a human plays with moving bots, and reset permits removal
+  ---
+  duration_ms: 6038.823084
+  type: 'test'
+  ...
+# Subtest: WeChat guides before joining; the same link joins in a browser and iPhone receives Safari guidance
+ok 25 - WeChat guides before joining; the same link joins in a browser and iPhone receives Safari guidance
+  ---
+  duration_ms: 4446.573541
+  type: 'test'
+  ...
+# Subtest: a delayed browser responds locally, converges after release, and restores its identity after a network cut
+not ok 26 - a delayed browser responds locally, converges after release, and restores its identity after a network cut
+  ---
+  duration_ms: 10764.426833
+  type: 'test'
+  location: '/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/browser-network.test.ts:1:584'
+  failureType: 'testCodeFailure'
+  error: 'visual/server difference 0.3437512747036571m'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/browser-network.test.ts:23:157)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# Port 5173 is in use, trying another one...

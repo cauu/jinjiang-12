@@ -1,0 +1,22 @@
+
+> test:entry-repeat
+> node --import tsx --test apps/test/entry-repeat.test.ts
+
+TAP version 13
+# Port 5173 is in use, trying another one...
+# Subtest: two independent browser sessions enter from the display URL ten times
+ok 1 - two independent browser sessions enter from the display URL ten times
+  ---
+  duration_ms: 22071.556709
+  type: 'test'
+  ...
+# 10/10 two-session browser entries passed at 192.168.30.25; QR image decoded; physical QR scanning and another device are not covered
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 22672.021958

@@ -1,0 +1,111 @@
+
+> test
+> node --import tsx --test apps/server/test/*.test.ts
+
+TAP version 13
+# Subtest: two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+ok 1 - two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+  ---
+  duration_ms: 2046.658917
+  type: 'test'
+  ...
+# Subtest: stationary tile triggers after protection; jump does not trigger a tile while airborne
+ok 2 - stationary tile triggers after protection; jump does not trigger a tile while airborne
+  ---
+  duration_ms: 0.289458
+  type: 'test'
+  ...
+# Subtest: 30 clients complete the six real rules, videos on server timeline and identical championship
+ok 3 - 30 clients complete the six real rules, videos on server timeline and identical championship
+  ---
+  duration_ms: 10843.236166
+  type: 'test'
+  ...
+# Subtest: host commands are phase checked and retrying a skip does not skip twice
+ok 4 - host commands are phase checked and retrying a skip does not skip twice
+  ---
+  duration_ms: 10.192292
+  type: 'test'
+  ...
+# Subtest: world acknowledgment advances only after a tick samples the latest input
+ok 5 - world acknowledgment advances only after a tick samples the latest input
+  ---
+  duration_ms: 1.482583
+  type: 'test'
+  ...
+# Subtest: disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+ok 6 - disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+  ---
+  duration_ms: 0.598
+  type: 'test'
+  ...
+# Subtest: media HTTP serves byte ranges and missing files produce a fallback signal
+ok 7 - media HTTP serves byte ranges and missing files produce a fallback signal
+  ---
+  duration_ms: 20.536542
+  type: 'test'
+  ...
+# Subtest: server owns video deadline and resume snapshot, and a late client cannot extend it
+ok 8 - server owns video deadline and resume snapshot, and a late client cannot extend it
+  ---
+  duration_ms: 1.44375
+  type: 'test'
+  ...
+# Subtest: default game begins with the fifteen-second opening and follows the server timeline
+ok 9 - default game begins with the fifteen-second opening and follows the server timeline
+  ---
+  duration_ms: 0.468375
+  type: 'test'
+  ...
+# Subtest: 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+ok 10 - 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+  ---
+  duration_ms: 29595.907083
+  type: 'test'
+  ...
+# seed=12345, RTT ms min=64, p50=157, p95=314, max=368; network cuts recovered=3; clients=30; sampled inputs accepted=255, rejected=31, rejection codes={"INPUT_NOT_ALLOWED":31}
+# Subtest: jinshi paints and transfers a tile, and eliminates the lowest team
+ok 11 - jinshi paints and transfers a tile, and eliminates the lowest team
+  ---
+  duration_ms: 1.487791
+  type: 'test'
+  ...
+# Subtest: dengshi all wrong voids the question and partial wrong answers are rescued to target
+ok 12 - dengshi all wrong voids the question and partial wrong answers are rescued to target
+  ---
+  duration_ms: 0.957125
+  type: 'test'
+  ...
+# Subtest: qibaoshi awards a contested landed item once and never awards an airborne one
+ok 13 - qibaoshi awards a contested landed item once and never awards an airborne one
+  ---
+  duration_ms: 0.385833
+  type: 'test'
+  ...
+# Subtest: jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+ok 14 - jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+  ---
+  duration_ms: 0.915541
+  type: 'test'
+  ...
+# Subtest: guishi goal selects the champion; all-fall and timeout paths terminate
+ok 15 - guishi goal selects the champion; all-fall and timeout paths terminate
+  ---
+  duration_ms: 0.31875
+  type: 'test'
+  ...
+# Subtest: guishi staircase can be climbed through ordinary directional and jump inputs
+ok 16 - guishi staircase can be climbed through ordinary directional and jump inputs
+  ---
+  duration_ms: 1.682083
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29788.419917

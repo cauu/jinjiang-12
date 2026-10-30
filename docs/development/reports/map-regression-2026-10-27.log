@@ -1,0 +1,25 @@
+
+> test:map
+> node --import tsx --test apps/test/map-guidance.test.ts
+
+TAP version 13
+# Port 5173 is in use, trying another one...
+# 11:06:30 PM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: the on-screen map shows all answer areas and delivery corners
+ok 1 - the on-screen map shows all answer areas and delivery corners
+  ---
+  duration_ms: 7578.57675
+  type: 'test'
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8184.805834

@@ -1,0 +1,32 @@
+
+> build
+> tsc --noEmit && npm run build -w @jinjiang/mobile && npm run build -w @jinjiang/display
+
+
+> build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 37 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:   0.33 kB
+dist/assets/index-BRHMH7zC.css    2.44 kB │ gzip:   0.92 kB
+dist/assets/index-DsYjV2g9.js    63.59 kB │ gzip:  21.37 kB
+dist/assets/three-Cg2MOKAc.js   481.51 kB │ gzip: 120.48 kB
+✓ built in 525ms
+
+> build
+> vite build
+
+vite v6.4.5 building for production...
+transforming...
+✓ 87 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.44 kB │ gzip:   0.33 kB
+dist/assets/index-DqbNUZA_.css    1.47 kB │ gzip:   0.68 kB
+dist/assets/index-DXjJsAZ5.js    85.45 kB │ gzip:  29.71 kB
+dist/assets/three-Cg2MOKAc.js   481.51 kB │ gzip: 120.48 kB
+✓ built in 567ms

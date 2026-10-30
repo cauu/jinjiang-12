@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright-core';
+import { io, gameProxy, type Socket } from './support/game-client.js';
+import { createServer as viteServer } from 'vite';
+import { resolve } from 'node:path';
+import { createGameServer } from '../server/src/server.js';
+const call=(s:Socket,e:string,d:unknown):Promise<any>=>new Promise((resolve,reject)=>s.timeout(4000).emit(e,d,(err:Error|null,r:any)=>err?reject(err):resolve(r)));
+
+test('a browser refresh during the opening resumes without extending the server timeline',{timeout:60000},async t=>{
+ const backend=createGameServer();const port=await backend.listen();const mobile=await viteServer({configFile:false,root:resolve('apps/mobile'),server:{host:'127.0.0.1',port:0,proxy:{...gameProxy(`http://127.0.0.1:${port}`),'/media':`http://127.0.0.1:${port}`}}});await mobile.listen();const addr=mobile.httpServer!.address();assert.ok(addr&&typeof addr!=='string');
+ const browser=await chromium.launch({executablePath:process.env.CHROME_PATH??'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true,args:['--use-angle=swiftshader','--enable-webgl']});const host=io(`http://127.0.0.1:${port}`,{forceNew:true}),other=io(`http://127.0.0.1:${port}`,{forceNew:true});
+ t.after(async()=>{host.disconnect();other.disconnect();await browser.close();await mobile.close();await backend.close();});await Promise.all([host,other].map(s=>new Promise<void>(r=>s.once('connect',()=>r()))));const room=(await call(host,'host:attach',{token:backend.game.hostToken})).data.roomId;assert.ok((await call(other,'room:join',{roomId:room,name:'其他玩家'})).ok);
+ const page=await browser.newPage({viewport:{width:844,height:390}});await page.goto(`http://127.0.0.1:${addr.port}/?room=${room}`);await page.locator('input[name=name]').fill('中途重连');await page.locator('form button').click();await page.locator('#entry').waitFor({state:'hidden'});const identity=await page.evaluate(()=>localStorage.getItem('jinjiang-session'));assert.ok(identity);
+ assert.ok((await call(host,'host:start',{})).ok);await page.waitForFunction(()=>{const video=document.querySelector('video');return !!video&&video.currentTime>.5;});assert.match(await page.locator('video').getAttribute('src')??'',/\/media\/intro_phone\.mp4$/);const before=(await call(host,'room:snapshot',{})).data;assert.equal(before.room.match.phase,'intro');const end=before.room.match.phaseEndsAt,phase=before.room.match.phaseId;
+ await page.reload();await page.locator('#entry').waitFor({state:'hidden'});await page.waitForFunction(()=>document.querySelector('#status')?.getAttribute('data-phase')==='intro');assert.equal(await page.evaluate(()=>localStorage.getItem('jinjiang-session')),identity);await page.waitForFunction(()=>{const video=document.querySelector('video');return !!video&&!video.paused&&video.currentTime>.1;});assert.match(await page.locator('video').getAttribute('src')??'',/\/media\/intro_phone\.mp4$/);const restored=(await call(host,'room:snapshot',{})).data;assert.equal(restored.room.match.phaseId,phase);assert.equal(restored.room.match.phaseEndsAt,end);const playerId=JSON.parse(identity).playerId;assert.equal(restored.room.players[playerId]?.name,'中途重连');assert.equal(restored.room.players[playerId]?.connected,true);
+ await page.waitForFunction(()=>document.querySelector('#status')?.getAttribute('data-phase')!=='intro',null,{timeout:20000});const after=(await call(host,'room:snapshot',{})).data;assert.notEqual(after.room.match.phase,'intro');assert.ok(after.serverTime>=end&&after.serverTime-end<3000,`timeline advanced ${after.serverTime-end}ms after deadline`);
+});

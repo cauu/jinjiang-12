@@ -1,0 +1,30 @@
+
+> test:entry-repeat
+> node --import tsx --test apps/test/entry-repeat.test.ts
+
+TAP version 13
+# Port 5173 is in use, trying another one...
+# 1:10:27 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# 1:10:34 AM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: two independent browser sessions enter from the display URL ten times
+ok 1 - two independent browser sessions enter from the display URL ten times
+  ---
+  duration_ms: 21069.032625
+  type: 'test'
+  ...
+# 10/10 two-session browser entries passed over localhost; physical QR scanning and LAN are not covered
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 21666.971375

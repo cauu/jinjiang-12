@@ -1,0 +1,21 @@
+TAP version 13
+# 12:57:41 PM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: simulated mobile renderer records five minutes with 30 avatars in jinshi
+ok 1 - simulated mobile renderer records five minutes with 30 avatars in jinshi
+  ---
+  duration_ms: 309319.751833
+  type: 'test'
+  ...
+# {"environment":"Chrome headless SwiftShader; 844x390; one browser, 29 Socket.IO players","durationMs":304991.59999990463,"sampleSeconds":304,"secondsAtLeast30":304,"percentAtLeast30":1,"frameP50Ms":16.699999928474426,"frameP95Ms":17.5,"stallsOver100Ms":0,"ruleOverrides":{"introMs":0,"cardMs":100,"countdownMs":100,"playMs":360000,"protectionMs":360000},"level":"01-jinshi"}
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 309896.087417

@@ -1,0 +1,3 @@
+Use case: precise-object-edit. Image 1 is the texture to revise. Preserve its restrained grey hand-crafted Chinese roof-tile look, direct orthographic surface and palette. Rebuild the tiles as a perfectly regular periodic pattern with a whole number of complete tile cycles across both width and height; align the ends of every tile across the seam. Top edge must exactly continue to bottom edge and left edge to right edge, for a repeating game texture. Output only one flat square texture tile. No border, text, object, perspective, scene or collage.
+
+参考图: ../原图/MOD-COM-004-grey-roof-tile.png

@@ -1,0 +1,25 @@
+
+> test:full-browser
+> node --import tsx --test apps/test/full-browser.test.ts
+
+TAP version 13
+# Port 5173 is in use, trying another one...
+# Port 5173 is in use, trying another one...
+# Port 5174 is in use, trying another one...
+# Port 5175 is in use, trying another one...
+# Subtest: browser users play a default-duration match without host skips
+ok 1 - browser users play a default-duration match without host skips
+  ---
+  duration_ms: 378498.418709
+  type: 'test'
+  ...
+# 10 browsers completed 6 levels and saw 冠军：玩家2
+1..1
+# tests 1
+# suites 0
+# pass 1
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 379047.935625

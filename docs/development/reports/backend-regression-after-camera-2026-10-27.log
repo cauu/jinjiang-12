@@ -1,0 +1,99 @@
+
+> test
+> node --import tsx --test apps/server/test/*.test.ts
+
+TAP version 13
+# Subtest: two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+ok 1 - two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+  ---
+  duration_ms: 2077.904916
+  type: 'test'
+  ...
+# Subtest: stationary tile triggers after protection; jump does not trigger a tile while airborne
+ok 2 - stationary tile triggers after protection; jump does not trigger a tile while airborne
+  ---
+  duration_ms: 0.356042
+  type: 'test'
+  ...
+# Subtest: 30 clients complete the six real rules, videos on server timeline and identical championship
+ok 3 - 30 clients complete the six real rules, videos on server timeline and identical championship
+  ---
+  duration_ms: 10611.696291
+  type: 'test'
+  ...
+# Subtest: host commands are phase checked and retrying a skip does not skip twice
+ok 4 - host commands are phase checked and retrying a skip does not skip twice
+  ---
+  duration_ms: 10.927334
+  type: 'test'
+  ...
+# Subtest: media HTTP serves byte ranges and missing files produce a fallback signal
+ok 5 - media HTTP serves byte ranges and missing files produce a fallback signal
+  ---
+  duration_ms: 20.871875
+  type: 'test'
+  ...
+# Subtest: server owns video deadline and resume snapshot, and a late client cannot extend it
+ok 6 - server owns video deadline and resume snapshot, and a late client cannot extend it
+  ---
+  duration_ms: 1.437917
+  type: 'test'
+  ...
+# Subtest: default game begins with the fifteen-second opening and follows the server timeline
+ok 7 - default game begins with the fifteen-second opening and follows the server timeline
+  ---
+  duration_ms: 0.436333
+  type: 'test'
+  ...
+# Subtest: 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+ok 8 - 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+  ---
+  duration_ms: 29600.623208
+  type: 'test'
+  ...
+# seed=12345, RTT ms min=70, p50=154, p95=331, max=369; network cuts recovered=3; clients=30; sampled inputs accepted=252, rejected=37, rejection codes={"INPUT_NOT_ALLOWED":37}
+# Subtest: jinshi paints and transfers a tile, and eliminates the lowest team
+ok 9 - jinshi paints and transfers a tile, and eliminates the lowest team
+  ---
+  duration_ms: 1.528375
+  type: 'test'
+  ...
+# Subtest: dengshi all wrong voids the question and partial wrong answers are rescued to target
+ok 10 - dengshi all wrong voids the question and partial wrong answers are rescued to target
+  ---
+  duration_ms: 0.955958
+  type: 'test'
+  ...
+# Subtest: qibaoshi awards a contested landed item once and never awards an airborne one
+ok 11 - qibaoshi awards a contested landed item once and never awards an airborne one
+  ---
+  duration_ms: 0.406292
+  type: 'test'
+  ...
+# Subtest: jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+ok 12 - jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+  ---
+  duration_ms: 0.9615
+  type: 'test'
+  ...
+# Subtest: guishi goal selects the champion; all-fall and timeout paths terminate
+ok 13 - guishi goal selects the champion; all-fall and timeout paths terminate
+  ---
+  duration_ms: 0.326667
+  type: 'test'
+  ...
+# Subtest: guishi staircase can be climbed through ordinary directional and jump inputs
+ok 14 - guishi staircase can be climbed through ordinary directional and jump inputs
+  ---
+  duration_ms: 1.501875
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29802.683167

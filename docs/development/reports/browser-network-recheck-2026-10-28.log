@@ -1,0 +1,27 @@
+
+> test:browser-network
+> node --import tsx --test apps/test/browser-network.test.ts
+
+TAP version 13
+# Subtest: a delayed browser responds locally, converges after release, and restores its identity after a network cut
+not ok 1 - a delayed browser responds locally, converges after release, and restores its identity after a network cut
+  ---
+  duration_ms: 32781.809667
+  type: 'test'
+  location: '/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/browser-network.test.ts:1:584'
+  failureType: 'testCodeFailure'
+  error: 'page.waitForFunction: Timeout 5000ms exceeded.'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TimeoutError'
+  stack: |-
+    TestContext.<anonymous> (/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/browser-network.test.ts:30:191)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 33340.107875

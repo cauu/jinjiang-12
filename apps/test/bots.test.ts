@@ -1,0 +1,35 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright-core';
+import { io, gameProxy, type Socket } from './support/game-client.js';
+import { createServer as viteServer } from 'vite';
+import { resolve } from 'node:path';
+import { createGameServer } from '../server/src/server.js';
+
+const call=(s:Socket,event:string,data:unknown):Promise<any>=>new Promise((resolve,reject)=>s.timeout(3000).emit(event,data,(err:Error|null,result:any)=>err?reject(err):resolve(result)));
+test('display adds bots, a human plays with moving bots, and reset permits removal', {timeout:30000}, async t=>{
+ const server=createGameServer({introMs:0,cardMs:0,countdownMs:0,playMs:60000});
+ const port=await server.listen(), target=`http://127.0.0.1:${port}`;
+ const vite=await viteServer({configFile:false,root:resolve('apps/display'),server:{host:'127.0.0.1',port:0,proxy:{...gameProxy(target),'/admin':target,'/media':target}}});await vite.listen();
+ const address=vite.httpServer!.address();assert.ok(address&&typeof address!=='string');
+ const browser=await chromium.launch({executablePath:process.env.CHROME_PATH??'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true,args:['--use-angle=swiftshader','--enable-webgl']});
+ const human=io(target,{forceNew:true});
+ t.after(async()=>{human.disconnect();await browser.close();await vite.close();await server.close();});
+ await new Promise<void>(r=>human.once('connect',()=>r()));
+ assert.equal((await call(human,'host:bots:add',{})).code,'HOST_DENIED');
+ const page=await browser.newPage({viewport:{width:1300,height:800}});await page.goto(`http://127.0.0.1:${address.port}`);await page.locator('#qr img').waitFor();
+ await page.locator('#add-bots').click();await page.waitForFunction(()=>document.querySelector('#count')?.textContent==='9');
+ const joined=await call(human,'room:join',{roomId:server.game.roomId,name:'试玩玩家'});assert.ok(joined.ok);
+ await page.waitForFunction(()=>document.querySelector('#count')?.textContent==='10');
+ await page.locator('#start').click();await page.waitForFunction(()=>document.querySelector('#title')?.getAttribute('data-phase')==='playing');
+ const id=[...server.game.players.values()].find(p=>p.name==='机器人1')!.id;
+ const start={...server.game.players.get(id)!.avatar!.position};
+ await page.waitForFunction(()=>document.querySelector('#title')?.getAttribute('data-phase')==='playing');
+ await new Promise(r=>setTimeout(r,800));
+ const end=server.game.players.get(id)!.avatar!.position;assert.ok(Math.hypot(end.x-start.x,end.z-start.z)>.3,'bot moved through authoritative simulation');
+ assert.equal((await call(human,'room:snapshot',{})).data.room.match.participants.length,10);
+ await page.locator('#add-bots').click();await page.waitForFunction(()=>document.querySelector('#error')?.textContent?.includes('请先点击重新开始'));
+ await page.locator('#reset').click();await page.waitForFunction(()=>document.querySelector('#title')?.getAttribute('data-phase')==='lobby');
+ await page.locator('#clear-bots').click();await page.waitForFunction(()=>document.querySelector('#count')?.textContent==='1');
+ assert.equal([...server.game.players.values()][0].name,'试玩玩家');
+});

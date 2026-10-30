@@ -1,0 +1,1 @@
+{"name":"@jinjiang/display","private":true,"type":"module","scripts":{"dev":"vite --host 0.0.0.0 --port 5174 --strictPort","build":"vite build"},"dependencies":{"@jinjiang/game-client":"*","@jinjiang/shared":"*","qrcode":"^1.5.4"}}

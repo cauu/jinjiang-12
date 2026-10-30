@@ -1,0 +1,123 @@
+
+> test
+> node --import tsx --test apps/server/test/*.test.ts
+
+TAP version 13
+# Subtest: two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+ok 1 - two real clients join, move and jump, trigger tiles, reconnect and finish with the same result
+  ---
+  duration_ms: 2130.643625
+  type: 'test'
+  ...
+# Subtest: stationary tile triggers after protection; jump does not trigger a tile while airborne
+ok 2 - stationary tile triggers after protection; jump does not trigger a tile while airborne
+  ---
+  duration_ms: 0.325875
+  type: 'test'
+  ...
+# Subtest: 30 clients complete the six real rules, videos on server timeline and identical championship
+ok 3 - 30 clients complete the six real rules, videos on server timeline and identical championship
+  ---
+  duration_ms: 10375.565083
+  type: 'test'
+  ...
+# Subtest: host commands are phase checked and retrying a skip does not skip twice
+ok 4 - host commands are phase checked and retrying a skip does not skip twice
+  ---
+  duration_ms: 5.757
+  type: 'test'
+  ...
+# Subtest: world acknowledgment advances only after a tick samples the latest input
+ok 5 - world acknowledgment advances only after a tick samples the latest input
+  ---
+  duration_ms: 1.211625
+  type: 'test'
+  ...
+# Subtest: disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+ok 6 - disconnected and expired inputs are not acknowledged as applied, and resume keeps the received cursor
+  ---
+  duration_ms: 0.676125
+  type: 'test'
+  ...
+# Subtest: phase reset discards unsampled prior-phase input without acknowledging it
+ok 7 - phase reset discards unsampled prior-phase input without acknowledging it
+  ---
+  duration_ms: 0.699333
+  type: 'test'
+  ...
+# Subtest: input is sampled at the 300ms boundary and discarded after it
+ok 8 - input is sampled at the 300ms boundary and discarded after it
+  ---
+  duration_ms: 0.178708
+  type: 'test'
+  ...
+# Subtest: media HTTP serves byte ranges and missing files produce a fallback signal
+ok 9 - media HTTP serves byte ranges and missing files produce a fallback signal
+  ---
+  duration_ms: 18.782917
+  type: 'test'
+  ...
+# Subtest: server owns video deadline and resume snapshot, and a late client cannot extend it
+ok 10 - server owns video deadline and resume snapshot, and a late client cannot extend it
+  ---
+  duration_ms: 1.565333
+  type: 'test'
+  ...
+# Subtest: default game begins with the fifteen-second opening and follows the server timeline
+ok 11 - default game begins with the fifteen-second opening and follows the server timeline
+  ---
+  duration_ms: 0.48125
+  type: 'test'
+  ...
+# Subtest: 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+ok 12 - 30 players with independent delay, jitter, intermittent spikes and network cuts recover and agree on a complete game
+  ---
+  duration_ms: 29710.738917
+  type: 'test'
+  ...
+# seed=12345, RTT ms min=74, p50=169, p95=336, max=367; network cuts recovered=3; clients=30; sampled inputs accepted=256, rejected=37, rejection codes={"INPUT_NOT_ALLOWED":37}
+# Subtest: jinshi paints and transfers a tile, and eliminates the lowest team
+ok 13 - jinshi paints and transfers a tile, and eliminates the lowest team
+  ---
+  duration_ms: 1.466791
+  type: 'test'
+  ...
+# Subtest: dengshi all wrong voids the question and partial wrong answers are rescued to target
+ok 14 - dengshi all wrong voids the question and partial wrong answers are rescued to target
+  ---
+  duration_ms: 0.952958
+  type: 'test'
+  ...
+# Subtest: qibaoshi awards a contested landed item once and never awards an airborne one
+ok 15 - qibaoshi awards a contested landed item once and never awards an airborne one
+  ---
+  duration_ms: 0.382583
+  type: 'test'
+  ...
+# Subtest: jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+ok 16 - jiushi carries one sack, delivers at all four corners, and completes at three deliveries
+  ---
+  duration_ms: 0.906291
+  type: 'test'
+  ...
+# Subtest: guishi goal selects the champion; all-fall and timeout paths terminate
+ok 17 - guishi goal selects the champion; all-fall and timeout paths terminate
+  ---
+  duration_ms: 0.3225
+  type: 'test'
+  ...
+# Subtest: guishi staircase can be climbed through ordinary directional and jump inputs
+ok 18 - guishi staircase can be climbed through ordinary directional and jump inputs
+  ---
+  duration_ms: 1.508375
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 29893.716834

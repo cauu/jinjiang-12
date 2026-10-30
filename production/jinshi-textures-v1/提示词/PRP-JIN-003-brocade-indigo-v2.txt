@@ -1,0 +1,3 @@
+Use case: precise-object-edit. Image 1 is the texture to revise. Preserve its rich dark indigo, warm ivory and antique gold Han-inspired woven cloud and diamond style, direct flat material appearance. Fix texture repeat: rebuild the ornament as an EXACT periodic square grid with a whole number of complete motif repeats across both width and height. The top edge must continue perfectly into the bottom edge; the left edge must continue perfectly into the right edge. Output only one flat square single texture tile. Avoid mismatch, cut off motifs, borders, frames, text, perspective and lighting. Not a collage or 2x2 preview.
+
+参考图: ../原图/PRP-JIN-003-brocade-indigo.png

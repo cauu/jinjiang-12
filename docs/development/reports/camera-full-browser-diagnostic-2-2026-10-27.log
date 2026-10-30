@@ -1,0 +1,157 @@
+
+> test:full-browser
+> node --import tsx --test apps/test/full-browser.test.ts
+
+TAP version 13
+# Port 5173 is in use, trying another one...
+# 11:35:02 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: write EPIPE
+#     at WriteWrap.onWriteComplete [as oncomplete] (node:internal/stream_base_commons:87:19)
+#     at WriteWrap.callbackTrampoline (node:internal/async_hooks:130:17)
+# 11:35:32 PM [vite] ws proxy socket error:
+# Error: read ECONNRESET
+#     at TCP.onStreamRead (node:internal/stream_base_commons:216:20)
+#     at TCP.callbackTrampoline (node:internal/async_hooks:130:17)
+# Subtest: 30 browser users play the default-duration six-level match without host skips
+not ok 1 - 30 browser users play the default-duration six-level match without host skips
+  ---
+  duration_ms: 108503.178125
+  type: 'test'
+  location: '/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/full-browser.test.ts:2:77'
+  failureType: 'testCodeFailure'
+  error: '01-jinshi 没有页面完成摇杆操作'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/Users/caiyufu/orca/workspaces/jinjiang-12/game-backend-mvp/apps/test/full-browser.test.ts:36:11)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 109088.313458

@@ -1,0 +1,1 @@
+{"name":"@jinjiang/server","private":true,"type":"module","scripts":{"dev":"tsx src/index.ts"},"dependencies":{"@colyseus/core":"^0.18.23","@colyseus/schema":"^5.0.42","@colyseus/ws-transport":"^0.18.4","@jinjiang/shared":"*"},"devDependencies":{"@types/express":"^5.0.6"}}

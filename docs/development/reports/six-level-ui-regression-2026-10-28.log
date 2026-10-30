@@ -1,0 +1,46 @@
+TAP version 13
+# Subtest: a browser player selects the correct lantern area and qualifies
+ok 1 - a browser player selects the correct lantern area and qualifies
+  ---
+  duration_ms: 16365.803167
+  type: 'test'
+  ...
+# Subtest: a browser player can jump up the staircase and claim the goal
+ok 2 - a browser player can jump up the staircase and claim the goal
+  ---
+  duration_ms: 13117.856125
+  type: 'test'
+  ...
+# Subtest: a browser player paints tiles by moving and sees their team area increase
+ok 3 - a browser player paints tiles by moving and sees their team area increase
+  ---
+  duration_ms: 5458.182083
+  type: 'test'
+  ...
+# Subtest: a browser player collects and delivers three grain sacks using actual controls
+ok 4 - a browser player collects and delivers three grain sacks using actual controls
+  ---
+  duration_ms: 11375.235292
+  type: 'test'
+  ...
+# Subtest: a browser player moves to a landed jiaozi and sees the score increase
+ok 5 - a browser player moves to a landed jiaozi and sees the score increase
+  ---
+  duration_ms: 8488.900292
+  type: 'test'
+  ...
+# Subtest: a player eliminated by falling resumes as spectator after refresh
+ok 6 - a player eliminated by falling resumes as spectator after refresh
+  ---
+  duration_ms: 7859.299542
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 65533.776292
