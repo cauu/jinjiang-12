@@ -21,7 +21,7 @@ export class DemoBots {
   if (!available) throw new GameError('ROOM_FULL');
   for (let i = 0; i < Math.min(count, available); i++) {
    const number = this.nextNumber++;
-   const { playerId } = this.game.join(`机器人${number}`, colors[(number-1)%colors.length]);
+   const { playerId } = this.game.join(`机器人${number}`, colors[(number-1)%colors.length], number % 2 ? 'boy' : 'girl');
    this.game.players.get(playerId)!.loaded = 100; // bots download nothing
    this.bots.set(playerId, { id: playerId, number, lastJumpAt: 0, checkAt: 0, checkX: 0, checkZ: 0, sidestepUntil: 0 });
   }

@@ -18,7 +18,7 @@ const errorCode = (error: unknown) => { const e = error as { reason?: unknown; m
 /** Builds the JSON snapshot the UI renders from the replicated schema. Missing optional values become null. */
 export function toSnapshot(state: RoomState, serverTime: number): Snapshot {
  const json = state.toJSON() as any, players: Record<string, Player> = {};
- for (const [id, p] of Object.entries<any>(json.players ?? {})) players[id] = { id: p.id, name: p.name, color: p.color, connected: p.connected, status: p.status, loaded: p.loaded, avatar: p.active ? { position: { x: p.x, y: p.y, z: p.z }, velocity: { x: 0, y: p.vy, z: 0 }, facing: p.facing, grounded: p.grounded, jumpHeld: false } : null };
+ for (const [id, p] of Object.entries<any>(json.players ?? {})) players[id] = { id: p.id, name: p.name, color: p.color, gender: p.gender === 'girl' ? 'girl' : 'boy', connected: p.connected, status: p.status, loaded: p.loaded, avatar: p.active ? { position: { x: p.x, y: p.y, z: p.z }, velocity: { x: 0, y: p.vy, z: 0 }, facing: p.facing, grounded: p.grounded, jumpHeld: false } : null };
  let match: Match | null = null;
  if (json.match) {
   const m = json.match, d = m.level.data;
@@ -81,9 +81,9 @@ export class Connection extends EventTarget {
   try { for (let attempt = 0; this.recovering; attempt++) { try { if (this.host) await this.attach(this.host); else if (this.session) await this.resume(this.session); else return; if (this.connected) return; } catch (error) { if ((error as Error).message === 'INVALID_SESSION') return; await new Promise(r => setTimeout(r, Math.min(5000, 300 * 2 ** attempt))); } } }
   finally { this.recovering = false; }
  }
- async join(roomId: string, name: string, color = '#e66b55') {
+ async join(roomId: string, name: string, color = '#e66b55', gender: 'boy' | 'girl' = 'boy') {
   this.generation++;
-  const room = await this.client.joinById<any>(roomId, { name, color }); this.bind(room as Room<any, RoomState>);
+  const room = await this.client.joinById<any>(roomId, { name, color, gender }); this.bind(room as Room<any, RoomState>);
   const data = await room.request('session') as { playerId: string; resumeToken: string };
   this.session = { roomId, name, playerId: data.playerId, resumeToken: data.resumeToken }; localStorage.setItem('jinjiang-session', JSON.stringify(this.session));
   await this.firstState(room);

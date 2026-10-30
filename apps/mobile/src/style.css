@@ -20,3 +20,10 @@ html,body,#app{width:100%;height:100%;overflow:hidden}.hud{align-items:flex-star
 .load-progress{margin:6px 0 0;font-size:13px;color:#5a7068;text-align:center}
 @media (max-height:400px){.load-progress{margin:2px 0 0;font-size:11px;line-height:1.2}}
 @media (max-height:260px){.load-progress{display:none}}
+
+.pick{display:flex;gap:8px;margin-bottom:8px}.pick input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.gender{flex:1;text-align:center}.gender span{display:block;padding:9px 0;border-radius:12px;background:#eee7d4;font-weight:700;border:2px solid transparent;cursor:pointer}
+.gender input:checked+span{background:#fff4d6;border-color:#d35b45;color:#a1402e}.gender input:focus-visible+span,.swatch input:focus-visible+span{outline:3px solid #2f6f8f;outline-offset:2px}
+.swatches{justify-content:space-between}.swatch{flex:1;display:flex;justify-content:center}.swatch span{display:block;width:30px;height:30px;border-radius:50%;background:var(--c);border:3px solid #fffcf1;box-shadow:0 0 0 1px #bda97a;cursor:pointer}
+.swatch input:checked+span{box-shadow:0 0 0 3px #233b36}
+@media (max-height:400px){.gender span{padding:5px 0;font-size:14px}.swatch span{width:24px;height:24px;border-width:2px}.pick{margin-bottom:5px}}

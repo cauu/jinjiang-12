@@ -42,7 +42,7 @@ export class StateMirror {
  private syncStructure(now: number) {
   const game = this.game, snapshot = game.snapshot(now), state = this.state;
   this.revision = game.revision; state.revision = game.revision;
-  syncMap(state.players, snapshot.room.players, PlayerState, (t, p) => { t.id = p.id; t.name = p.name; t.color = p.color; t.connected = p.connected; t.status = p.status; t.loaded = p.loaded ?? 0; });
+  syncMap(state.players, snapshot.room.players, PlayerState, (t, p) => { t.id = p.id; t.name = p.name; t.color = p.color; t.gender = p.gender; t.connected = p.connected; t.status = p.status; t.loaded = p.loaded ?? 0; });
   const m = snapshot.room.match;
   if (!m) { state.match = undefined; return; }
   if (!state.match || state.match.id !== m.id) state.match = new MatchState();

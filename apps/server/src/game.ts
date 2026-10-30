@@ -5,7 +5,7 @@ import { initPhysics, MotionWorld, NEUTRAL, STAND_HEIGHT, tileAt, tilesUnder, ti
 // The simulation needs Rapier's WASM module; load it before any Game can step.
 await initPhysics();
 export type { Command } from '@jinjiang/shared';
-type Player = { id: string; name: string; color: string; connected: boolean; status: 'waiting' | 'playing' | 'eliminated' | 'qualified' | 'spectating'; avatar: Avatar | null; loaded: number };
+type Player = { id: string; name: string; color: string; gender: 'boy' | 'girl'; connected: boolean; status: 'waiting' | 'playing' | 'eliminated' | 'qualified' | 'spectating'; avatar: Avatar | null; loaded: number };
 /** Fixed-step commands waiting for the next simulation tick. Each command is exactly one predicted client step. */
 type Motion = { queue: Command[]; lastInputAt: number; jumpTime: number; received: number; processed: number; dropped: number; jumps: number };
 const QUEUE_LIMIT = 64;
@@ -27,10 +27,10 @@ export class Game {
  constructor(readonly opts:Options=defaults) {}
  checkHost(value:unknown) { return typeof value==='string' && equalToken(value,this.hostToken); }
  snapshot(now:number) { const m=this.match; const mediaId=m?.phase==='intro'?'intro':m?.phase==='ending'?'ending':m?.phase==='transition'&&(m.transitionId==='wind'||m.transitionId==='rebirth')?m.transitionId:null; const match=m?{...m,media:mediaId?{id:mediaId,endsAt:m.phaseEndsAt!,durationMs:mediaId==='intro'?this.opts.introMs:mediaId==='wind'?this.opts.windMs:mediaId==='rebirth'?this.opts.rebirthMs:this.opts.endingMs,displayUrl:`/media/${mediaId}.mp4`,phoneUrl:`/media/${mediaId}_phone.mp4`}:null}:null; return structuredClone({serverTime:now,revision:this.revision,room:{id:this.roomId,players:Object.fromEntries(this.players),match}}); }
- join(name:unknown,color:unknown) {
+ join(name:unknown,color:unknown,gender:unknown='boy') {
   if(typeof name!=='string'||!name.trim()||name.trim().length>24) throw new GameError('INVALID_NAME');
   const id=randomUUID(),secret=token();
-  const player:Player={id,name:name.trim(),color:typeof color==='string'&&/^#[0-9a-f]{6}$/i.test(color)?color:'#e66b55',connected:true,loaded:0,status:this.match||[...this.players.values()].filter(p=>p.status==='waiting').length>=32?'spectating':'waiting',avatar:null};
+  const player:Player={id,name:name.trim(),gender:gender==='girl'?'girl':'boy',color:typeof color==='string'&&/^#[0-9a-f]{6}$/i.test(color)?color:'#e66b55',connected:true,loaded:0,status:this.match||[...this.players.values()].filter(p=>p.status==='waiting').length>=32?'spectating':'waiting',avatar:null};
   this.players.set(id,player); this.tokens.set(id,secret); this.revision++; return {playerId:id,resumeToken:secret};
  }
  resume(id:unknown,secret:unknown) { if(typeof id!=='string'||typeof secret!=='string') throw new GameError('INVALID_SESSION'); const expected=this.tokens.get(id),p=this.players.get(id); if(!expected||!p||!equalToken(secret,expected)) throw new GameError('INVALID_SESSION'); p.connected=true; if(!this.match)this.fillWaitingSlots(); this.revision++; return p.id; }

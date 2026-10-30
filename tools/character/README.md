@@ -9,7 +9,7 @@ SOURCE=/Users/caiyufu/Dev/projects/jinjiang-12/assets/hanfu_boy_animated.blend
 "$BLENDER" -b "$SOURCE" -t 4 --python tools/character/export.py -- 0.05 "$PWD/packages/game-client/src/assets/hanfu-boy-low.glb"
 "$BLENDER" -b "$SOURCE" --python tools/character/extract-texture.py -- /tmp/hanfu-base-original.png
 sips -z 1024 1024 /tmp/hanfu-base-original.png --out /tmp/hanfu-base.png
-node tools/character/mask.mjs /tmp/hanfu-base.png packages/game-client/src/assets/hanfu-cloth-mask.png
+node tools/character/mask.mjs /tmp/hanfu-base.png tools/character/hanfu-boy-cloth-mask.png
 node tools/character/bake-atlas.mjs
 ```
 
@@ -37,4 +37,10 @@ node tools/export-models.mjs street_house # 只导出某个
 # 源文件不在 assets/models 时：MODELS_DIR=/path/to/models node tools/export-models.mjs
 ```
 
-流程：Blender（`tools/export-models.py`）去掉相机、灯光、摄影棚地面和参考图，大于 1024 的贴图缩到 1024；两个角色减面到 10%（约 3 万三角形）；再用 gltf-transform 把贴图转 WebP、几何体做 meshopt 压缩。场景模型 0.1–0.24MB/个、2.3k–3k 三角形，角色约 0.77MB/个，全部加起来约 3.1MB。`hanfu_boy_animated`、`hanfu_girl_animated` 导出为 `hanfu_boy.glb`、`hanfu_girl.glb`，保留 `Walk_Cycle`、`Run_Cycle`、`Jump_InPlace`、`Hit_Reaction` 四个动作。
+流程：Blender（`tools/export-models.py`）去掉相机、灯光、摄影棚地面和参考图，大于 1024 的贴图缩到 1024；两个角色减面到 10%（约 3 万三角形）；再用 gltf-transform 把贴图转 WebP、几何体做 meshopt 压缩。场景模型 0.1–0.24MB/个、2.3k–3k 三角形，角色约 0.77MB/个，全部加起来约 3.5MB。`hanfu_boy_animated`、`hanfu_girl_animated` 导出为 `hanfu_boy.glb`、`hanfu_girl.glb`，保留 `Walk_Cycle`、`Run_Cycle`、`Jump_InPlace`、`Hit_Reaction` 四个动作。
+
+## 运行时角色与资源一览（2026-10-30）
+
+- 自己的角色：`assets/models/hanfu_boy.glb`、`hanfu_girl.glb`（入场时选性别），动作 `Walk_Cycle`、`Run_Cycle`、`Jump_InPlace`、`Hit_Reaction`。衣服换色蒙版：`hanfu-boy-cloth-mask.webp`（沿用原蒙版）、`hanfu-girl-cloth-mask.webp`（按女孩贴图的红色衣服自动生成）。
+- 其他玩家与大屏：按玩家所选性别使用 `hanfu-boy-crowd-atlas.webp` / `hanfu-boy-crowd-mask.webp` 或 `hanfu-girl-crowd-atlas.webp` / `hanfu-girl-crowd-mask.webp`，分别由 `hanfu-boy-low.glb`、`hanfu-girl-low.glb` 烘焙的 8 方向精灵图。性别随玩家状态同步给所有客户端。
+- `hanfu-*-low.glb`、`tools/character/hanfu-*-cloth-mask.png`、`hanfu-*-crowd-*.png` 只给烘焙工具用，运行时不加载。`node tools/character/bake-atlas.mjs` 会同时烘焙男孩和女孩两套。

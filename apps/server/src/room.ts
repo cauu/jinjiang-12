@@ -55,12 +55,12 @@ export class GameRoom extends Room<{ state: RoomState; input: InputCommand }> {
   try { action(); this.mirror.sync(this.now()); return { revision: this.game.revision }; }
   catch (error) { if (ctx) return ctx.reject(error instanceof GameError ? error.code : 'INTERNAL_ERROR'); return fail(error); }
  }
- onJoin(client: Client, options: { host?: unknown; name?: unknown; color?: unknown; resume?: { playerId?: unknown; resumeToken?: unknown } } = {}) {
+ onJoin(client: Client, options: { host?: unknown; name?: unknown; color?: unknown; gender?: unknown; resume?: { playerId?: unknown; resumeToken?: unknown } } = {}) {
   try {
    if (options.host !== undefined) { if (!this.game.checkHost(options.host)) throw new GameError('HOST_DENIED'); client.userData = { playerId: null, host: true } satisfies Seat; return; }
    let seat: Seat;
    if (options.resume) seat = { playerId: this.game.resume(options.resume.playerId, options.resume.resumeToken), resumeToken: String(options.resume.resumeToken), host: false };
-   else { const session = this.game.join(options.name, options.color); seat = { playerId: session.playerId, resumeToken: session.resumeToken, host: false }; }
+   else { const session = this.game.join(options.name, options.color, options.gender); seat = { playerId: session.playerId, resumeToken: session.resumeToken, host: false }; }
    for (const other of this.clients) if (other !== client && (other.userData as Seat | undefined)?.playerId === seat.playerId) { (other.userData as Seat).playerId = null; other.leave(REPLACED, 'REPLACED'); }
    client.userData = seat;
    this.mirror.sync(this.now());
