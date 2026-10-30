@@ -6,8 +6,8 @@ const heroBoyUrl = new URL('./assets/models/hanfu_boy.glb', import.meta.url).hre
 const heroGirlUrl = new URL('./assets/models/hanfu_girl.glb', import.meta.url).href;
 const boyMaskUrl = new URL('./assets/hanfu-boy-cloth-mask.webp', import.meta.url).href;
 const girlMaskUrl = new URL('./assets/hanfu-girl-cloth-mask.webp', import.meta.url).href;
-const atlasUrls = { boy: new URL('./assets/hanfu-boy-crowd-atlas.webp', import.meta.url).href, girl: new URL('./assets/hanfu-girl-crowd-atlas.webp', import.meta.url).href };
-const atlasMaskUrls = { boy: new URL('./assets/hanfu-boy-crowd-mask.webp', import.meta.url).href, girl: new URL('./assets/hanfu-girl-crowd-mask.webp', import.meta.url).href };
+export const atlasUrls = { boy: new URL('./assets/hanfu-boy-crowd-atlas.webp', import.meta.url).href, girl: new URL('./assets/hanfu-girl-crowd-atlas.webp', import.meta.url).href };
+export const atlasMaskUrls = { boy: new URL('./assets/hanfu-boy-crowd-mask.webp', import.meta.url).href, girl: new URL('./assets/hanfu-girl-crowd-mask.webp', import.meta.url).href };
 /** Character files, loaded first by the preloader. */
 export const CHARACTER_ASSETS = [heroBoyUrl, heroGirlUrl, boyMaskUrl, girlMaskUrl, ...Object.values(atlasUrls), ...Object.values(atlasMaskUrls)];
 

@@ -1,0 +1,7 @@
+Use case: game prop texture atlas. Image 1 is the style and palette reference only (handcrafted papercraft Han-dynasty Chengdu brocade market; see its cream banners with the character 錦). Asset: a 1024x1024 atlas of 8 horizontal signboards (匾额) for buildings in a papercraft party game, arranged as exactly 2 columns x 4 rows; every board has the SAME size and exactly 4:1 width-to-height ratio, is centred in its cell, and is separated from the others by plain flat pure-white background. Straight-on front view, flat even lighting, no perspective, no shadow on the background.
+Each board: thick layered paper-card board with a slightly raised dark warm-timber frame and cut paper edges, visible fine paper fibre, small simple Han geometric corner ornaments (no dragons). The characters are TRADITIONAL Chinese (繁體), written large, bold and centred horizontally from LEFT to RIGHT, in a clean Han clerical script (隶书) style, each character clearly legible and written exactly as given. No other text, seals, signatures or decorations with letters.
+Boards, row by row, left column then right column:
+Row 1: [布肆] cream board with dark brown characters | [陶器] ochre board with dark brown characters
+Row 2: [蜀鹽] muted indigo board with cream characters | [錦] vermilion board with one cream character
+Row 3: [絲] cream board with one dark brown character | [繡] muted indigo board with one cream character
+Row 4: [染] ochre board with one dark brown character | [繒] cream board with one dark brown character

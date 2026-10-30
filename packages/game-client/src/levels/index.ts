@@ -1,7 +1,7 @@
 /** Per-level scene views. Each level declares its assets (for preloading) and owns its props,
  * floor look and gameplay feedback (telegraphs, pickups, collapses). Hard-coded on purpose. */
 import * as THREE from 'three';
-import { createJinshiScene, createJinshiTileTexture, JINSHI_ASSETS } from '../jinshi-scene.js';
+import { createJinshiFloorMaterial, createJinshiScene, JINSHI_ASSETS } from '../jinshi-scene.js';
 import { MeshPool, TEAM_COLORS, TileFloor, disposeTree, rails, textSprite, type LevelFrame, type LevelView } from './common.js';
 export type { LevelFrame, LevelView } from './common.js';
 
@@ -21,14 +21,26 @@ function crumble(floor: TileFloor, i: number, base: number, disappearsAt: number
  floor.set(i, true, 0x5b3a2e, -12.5 * (since / 1000) ** 2); // falls under the game's 25 m/s² gravity
 }
 
+const v = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+const JINSHI_OVERVIEW = { position: v(0, 22, 30), target: v(0, 0, -3) };
+const JINSHI_FLYOVER = {
+ position: new THREE.CatmullRomCurve3([v(0, 2.3, 31), v(0, 2.5, 19), v(-3, 5.5, 7), v(-5, 6, -5), v(4, 9, -4), v(8, 14, 12)]),
+ target: new THREE.CatmullRomCurve3([v(0, 3, 16), v(0, 2.2, 4), v(-1, 3, -12), v(0, 4, -14.5), v(0, 2, -10), v(0, 0, -2)]),
+};
+
 /** Lobby and Jinshi share the paper-market environment; Jinshi also paints team colours. */
 function jinshi(lobby: boolean): LevelView {
- const env = createJinshiScene(), tile = createJinshiTileTexture(), floor = new TileFloor('01-jinshi', new THREE.MeshBasicMaterial({ map: tile }));
+ const env = createJinshiScene(), tile = createJinshiFloorMaterial(), floor = new TileFloor('01-jinshi', tile.material);
  const group = new THREE.Group(); group.add(env.group, floor.mesh, rails());
  const owners: (string | null)[] = [], paintedAt = new Float64Array(400);
  return { group, background: 0xf4d9a8, environment: 'jinshi', occluders: env.group.children, camera: { lookAhead: 1.45, lift: .2 },
-  update({ tick, data }) {
-   env.update(tick);
+  // Lower and further back than the default so the north street and roofline frame the arena.
+  overview: JINSHI_OVERVIEW,
+  // In through the south archway, over the stage to the market tower, then up and round to play.
+  flyover: lobby ? undefined : JINSHI_FLYOVER,
+  update({ tick, data, camera, match }) {
+   // Far roofs and the archway only show in raised shots (display, spectators) and the flyover; the phones' follow camera skips them.
+   env.update(tick, camera.position.y > 6 || match?.phase === 'card' || match?.phase === 'countdown');
    for (let i = 0; i < 400; i++) {
     const { row, col } = floor.rowCol(i), owner = lobby ? null : data?.owners[i] ?? null;
     if (owner !== (owners[i] ?? null)) { if (owner) paintedAt[i] = tick; owners[i] = owner; }

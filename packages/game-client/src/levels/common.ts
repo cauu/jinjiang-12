@@ -4,7 +4,8 @@ import * as THREE from 'three';
 import type { LevelData, Match } from '@jinjiang/shared';
 import type { Connection } from '../net.js';
 
-export type LevelFrame = { now: number; tick: number; dt: number; match: Match | null | undefined; data: LevelData | undefined; connection: Connection; mode: 'mobile' | 'display'; revision: number };
+/** `camera` is last frame's view; levels may use it to skip scenery the current shot cannot see. */
+export type LevelFrame = { now: number; tick: number; dt: number; match: Match | null | undefined; data: LevelData | undefined; connection: Connection; mode: 'mobile' | 'display'; revision: number; camera: THREE.Camera };
 export interface LevelView {
  readonly group: THREE.Group;
  /** Clear colour behind the level. */
@@ -15,6 +16,10 @@ export interface LevelView {
  readonly occluders?: THREE.Object3D[];
  /** Phone follow camera: extra look-ahead and target height. */
  readonly camera?: { lookAhead: number; lift: number };
+ /** Fixed display/spectator shot; defaults to looking down on the whole arena. */
+ readonly overview?: { position: THREE.Vector3; target: THREE.Vector3 };
+ /** Establishing shot played on every screen during the level card and countdown; it ends on the gameplay camera. */
+ readonly flyover?: { position: THREE.Curve<THREE.Vector3>; target: THREE.Curve<THREE.Vector3> };
  update(frame: LevelFrame): void;
  dispose(): void;
 }

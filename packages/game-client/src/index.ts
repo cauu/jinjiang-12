@@ -17,11 +17,13 @@ type Visual = { yaw: number; speed: number; last: THREE.Vector3; airborne: numbe
 const TURN_SPEED = 12;
 /** Rate used for turns sharper than 120° (rad/s): a reversal completes in about 0.15 s. */
 const REVERSE_TURN_SPEED = 22;
+/** Server card and countdown lengths (apps/server/src/game.ts defaults); the level flyover spans both. */
+const INTRO_CARD_MS = 7000, INTRO_COUNTDOWN_MS = 3000;
 
 /** Shared whitebox renderer. Gameplay remains authoritative on the server. */
 export class SceneView {
  private renderer:THREE.WebGLRenderer;private scene=new THREE.Scene();private camera=new THREE.PerspectiveCamera(50,1,.1,150);private level:LevelView|null=null;private levelId='';private players=new Map<string,THREE.Group>();private characters=new Map<string,Character>();private characterAssets=new Characters();private modelState="loading";private target=new THREE.Vector3();private raf=0;private lastFrame=performance.now();private visuals=new Map<string,Visual>();
- private sphere=new THREE.SphereGeometry(.42,12,8);private selfRingGeometry=new THREE.TorusGeometry(.50,.035,6,32);private selfMarkerMaterial=new THREE.MeshBasicMaterial({color:0xffffff,depthTest:true,depthWrite:false});private inspectCamera=new URLSearchParams(location.search).get('cameraMetrics')==='1';private netMetrics=new URLSearchParams(location.search).get('netMetrics')==='1';private lastControlCheck=0;
+ private sphere=new THREE.SphereGeometry(.42,12,8);private selfRingGeometry=new THREE.TorusGeometry(.50,.035,6,32);private selfMarkerMaterial=new THREE.MeshBasicMaterial({color:0xffffff,depthTest:true,depthWrite:false});private inspectCamera=new URLSearchParams(location.search).get('cameraMetrics')==='1';private netMetrics=new URLSearchParams(location.search).get('netMetrics')==='1';private lastControlCheck=0;private flyPoint=new THREE.Vector3();
  constructor(private container:HTMLElement,private connection:Connection,private mode:'mobile'|'display'){
   this.renderer=new THREE.WebGLRenderer({antialias:true});this.renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));this.renderer.setClearColor(0xcce7e5);container.append(this.renderer.domElement);this.scene.background=new THREE.Color(0xd3eae4);this.scene.add(new THREE.HemisphereLight(0xffffff,0x988979,2));const light=new THREE.DirectionalLight(0xffffff,1.5);light.position.set(3,8,5);this.scene.add(light);this.characterAssets.ready.then(()=>{this.modelState='ready';}).catch(error=>{this.modelState='error';console.error('角色模型加载失败',error);const notice=document.createElement('div');notice.textContent='角色资源加载失败，已使用简化角色';notice.setAttribute('role','status');notice.style.cssText='position:fixed;bottom:8px;left:50%;transform:translateX(-50%);z-index:12;background:#233b36e8;color:white;padding:5px 10px;border-radius:6px;font-size:12px;pointer-events:none';this.container.append(notice);});
   window.addEventListener('resize',this.resize);this.resize();this.frame();
@@ -32,7 +34,7 @@ export class SceneView {
  private frame=()=>{
   this.raf=requestAnimationFrame(this.frame);const tick=performance.now(),dt=Math.min(.05,Math.max(0,(tick-this.lastFrame)/1000));this.lastFrame=tick;this.connection.update(tick);const snap=this.connection.snapshot,match=snap?.room.match,level=match?.level,levelId=level?.id??'lobby';if(match?.media)return;if(levelId!==this.levelId)this.switchLevel(levelId);this.renderer.domElement.dataset.sceneLevel=levelId;this.renderer.domElement.dataset.environment=this.level!.environment;
   const stairs=levelId==='06-guishi',now=this.connection.serverNow(),d=level?.data;
-  this.level!.update({now,tick,dt,match,data:d,connection:this.connection,mode:this.mode,revision:snap?.revision??-1});
+  this.level!.update({now,tick,dt,match,data:d,connection:this.connection,mode:this.mode,revision:snap?.revision??-1,camera:this.camera});
   const activeIds=new Set<string>(),selfId=this.connection.session?.playerId,controlling=this.connection.controlling();
   for(const [id,p] of Object.entries(snap?.room.players??{})){
    // Players who qualify early (Jiushi) leave the field until the round ends.
@@ -58,10 +60,17 @@ export class SceneView {
   for(const [id,mesh] of this.players)if(!activeIds.has(id)){this.scene.remove(mesh);const character=this.characters.get(id);if(character){this.characterAssets.dispose(character);this.characters.delete(id);}const placeholder=mesh.getObjectByName('placeholder') as THREE.Mesh|undefined;if(placeholder)(placeholder.material as THREE.Material).dispose();const label=mesh.getObjectByName('self-label') as THREE.Sprite|undefined;if(label){label.material.map?.dispose();label.material.dispose();}this.players.delete(id);}this.renderer.domElement.dataset.modelState=this.modelState;this.renderer.domElement.dataset.modelCount=String(this.characters.size);
   const self=this.connection.session?.playerId,avatar=self?this.connection.pose(self):null;
   const ownMesh=self?this.players.get(self):undefined;
+  const restTarget=new THREE.Vector3(),restPosition=new THREE.Vector3();let following=false;
   if(this.mode==='mobile'&&avatar&&ownMesh&&snap?.room.players[self!]?.status==='playing'){
    if(!ownMesh.getObjectByName('self-ring')){const ring=new THREE.Mesh(this.selfRingGeometry,this.selfMarkerMaterial);ring.name='self-ring';ring.rotation.x=Math.PI/2;ring.position.y=-.47;ring.renderOrder=9;ownMesh.add(ring);}const selfName=snap?.room.players[self!]?.name??'';const index=match?.participants.indexOf(self!)??-1;const text=index>=0?`${selfName} · ${String(index+1).padStart(2,'0')}`:selfName;let label=ownMesh.getObjectByName('self-label') as THREE.Sprite|undefined;if(!label||label.userData.text!==text){if(label){ownMesh.remove(label);label.material.map?.dispose();label.material.dispose();}const canvas=document.createElement('canvas');canvas.width=512;canvas.height=96;const ctx=canvas.getContext('2d')!;ctx.font='bold 45px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=7;ctx.strokeStyle='#243a38';ctx.strokeText(text,256,48,480);ctx.fillStyle='#fff';ctx.fillText(text,256,48,480);const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;label=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,transparent:true,depthTest:false}));label.name='self-label';label.userData.text=text;label.position.y=.78;label.scale.set(1.7,.32,1);label.renderOrder=10;ownMesh.add(label);this.renderer.domElement.dataset.selfLabel=text;}
-   const rendered=ownMesh.position;const follow=1-Math.exp(-dt*6.3);const view=this.level!.camera;this.target.lerp(new THREE.Vector3(rendered.x,rendered.y+(view?.lift??0),rendered.z-(view?.lookAhead??1.2)),follow);this.camera.position.lerp(new THREE.Vector3(rendered.x,rendered.y+3.4,rendered.z+4.6),follow);
-  }else{this.target.set(0,0,stairs?-2:0);this.camera.position.lerp(new THREE.Vector3(0,26,25),1-Math.exp(-dt*5));}
+   const rendered=ownMesh.position,view=this.level!.camera;restTarget.set(rendered.x,rendered.y+(view?.lift??0),rendered.z-(view?.lookAhead??1.2));restPosition.set(rendered.x,rendered.y+3.4,rendered.z+4.6);following=true;
+  }else{const overview=this.level!.overview;restTarget.copy(overview?.target??restTarget.set(0,0,stairs?-2:0));restPosition.copy(overview?.position??restPosition.set(0,26,25));}
+  // The level's establishing shot spans the card and countdown on every screen (server-timed),
+  // then eases into the gameplay camera so play starts from exactly where the shot ends.
+  const intro=this.introProgress(match,now),flyover=this.level!.flyover;
+  if(intro!==null&&flyover){const t=THREE.MathUtils.smootherstep(intro,0,.8),hand=THREE.MathUtils.smootherstep(intro,.7,1);this.camera.position.copy(flyover.position.getPoint(t,this.flyPoint).lerp(restPosition,hand));this.target.copy(flyover.target.getPoint(t,this.flyPoint).lerp(restTarget,hand));}
+  else if(following){const follow=1-Math.exp(-dt*6.3);this.target.lerp(restTarget,follow);this.camera.position.lerp(restPosition,follow);}
+  else{this.target.copy(restTarget);this.camera.position.lerp(restPosition,1-Math.exp(-dt*5));}
   this.camera.lookAt(this.target);this.renderer.render(this.scene,this.camera);
   // Keep the primary touch targets usable, but fade them when they cover another
   // player's projected body. The touch hit box itself never moves or shrinks.
@@ -76,5 +85,10 @@ export class SceneView {
   }
   this.renderer.domElement.dispatchEvent(new Event('jinjiang:render')); 
  };
+ /** 0→1 across the level card and countdown, or null outside them. */
+ private introProgress(match:{phase:string;phaseEndsAt:number|null}|null|undefined,now:number){
+  if(!match||match.phaseEndsAt==null||(match.phase!=='card'&&match.phase!=='countdown'))return null;
+  const end=match.phaseEndsAt+(match.phase==='card'?INTRO_COUNTDOWN_MS:0);return THREE.MathUtils.clamp(1-(end-now)/(INTRO_CARD_MS+INTRO_COUNTDOWN_MS),0,1);
+ }
  destroy(){if(this.level){this.scene.remove(this.level.group);this.level.dispose();this.level=null;}cancelAnimationFrame(this.raf);window.removeEventListener('resize',this.resize);for(const character of this.characters.values())this.characterAssets.dispose(character);this.characters.clear();this.characterAssets.disposeAll();this.selfRingGeometry.dispose();this.selfMarkerMaterial.dispose();this.renderer.dispose();this.container.replaceChildren();}
 }
