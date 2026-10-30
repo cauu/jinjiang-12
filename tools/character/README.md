@@ -26,3 +26,15 @@ npx @gltf-transform/cli meshopt tmp.glb packages/game-client/src/assets/hanfu-bo
 ```
 
 运行时读取同名 `.webp`（无损，可见像素与 PNG 完全一致）。重新烘焙图集或蒙版后，用 sharp 以 `webp({ lossless: true, exact: true })` 重新生成对应的 `.webp`。
+
+## 定稿模型导出（2026-10-30）
+
+`assets/models/*.blend` 是定稿源文件，**不入 git**（`.gitignore` 已排除 `assets/**/*.blend`）。运行时用的是导出后的 `packages/game-client/src/assets/models/*.glb`：
+
+```sh
+node tools/export-models.mjs              # 全部
+node tools/export-models.mjs street_house # 只导出某个
+# 源文件不在 assets/models 时：MODELS_DIR=/path/to/models node tools/export-models.mjs
+```
+
+流程：Blender（`tools/export-models.py`）去掉相机、灯光、摄影棚地面和参考图，大于 1024 的贴图缩到 1024；两个角色减面到 10%（约 3 万三角形）；再用 gltf-transform 把贴图转 WebP、几何体做 meshopt 压缩。场景模型 0.1–0.24MB/个、2.3k–3k 三角形，角色约 0.77MB/个，全部加起来约 3.1MB。`hanfu_boy_animated`、`hanfu_girl_animated` 导出为 `hanfu_boy.glb`、`hanfu_girl.glb`，保留 `Walk_Cycle`、`Run_Cycle`、`Jump_InPlace`、`Hit_Reaction` 四个动作。

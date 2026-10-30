@@ -1,3 +1,7 @@
 node_modules/
 dist/
 .DS_Store
+
+# Blender sources are not committed; only the exported .glb files are
+assets/**/*.blend
+assets/**/*.blend1
